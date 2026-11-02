@@ -1,0 +1,181 @@
+.chat {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: var(--bg, #fdf8f2);
+}
+
+.thread {
+  flex: 1;
+  min-height: 0;
+  padding: 24rpx 24rpx 8rpx;
+  box-sizing: border-box;
+}
+.thread-inner { display: flex; flex-direction: column; gap: 24rpx; padding-bottom: 16rpx; }
+
+.row-bot, .row-me { display: flex; align-items: flex-start; gap: 14rpx; }
+.row-me { justify-content: flex-end; }
+
+.avatar {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 50%;
+  background: var(--brand-soft, #fbe7d6);
+  flex-shrink: 0;
+}
+
+.bubble-wrap { max-width: 78%; display: flex; flex-direction: column; gap: 12rpx; }
+.row-me .bubble-wrap { align-items: flex-end; }
+
+.bubble {
+  padding: 20rpx 24rpx;
+  border-radius: 24rpx;
+  font-size: 27rpx;
+  line-height: 1.65;
+  word-break: break-word;
+}
+.bubble.bot {
+  background: #ffffff;
+  color: var(--ink, #4a382a);
+  border: 1rpx solid var(--line, #f0e3d6);
+  border-top-left-radius: 8rpx;
+}
+.bubble.me {
+  background: var(--brand, #b8500f);
+  color: #ffffff;
+  border-top-right-radius: 8rpx;
+}
+.typing { color: var(--muted, #94897e); }
+
+.go {
+  align-self: flex-start;
+  margin: 0;
+  padding: 10rpx 22rpx;
+  font-size: 24rpx;
+  line-height: 1.4;
+  border-radius: 999rpx;
+  background: var(--brand-soft, #fbe7d6);
+  color: var(--brand-deep, #97400a);
+  font-weight: 600;
+}
+.go::after { border: none; }
+.row-me .go { align-self: flex-end; }
+
+.related { display: flex; flex-direction: column; gap: 10rpx; }
+.rel {
+  font-size: 24rpx;
+  color: var(--ink-soft, #6b4a2b);
+  background: #ffffff;
+  border: 1rpx dashed var(--brand-line, #f0e3d6);
+  border-radius: 16rpx;
+  padding: 12rpx 20rpx;
+}
+
+.quick-bar {
+  padding: 12rpx 0 4rpx;
+  background: var(--bg, #fdf8f2);
+}
+.quick-scroll { white-space: nowrap; }
+.quick-row { display: inline-flex; gap: 14rpx; padding: 0 24rpx; }
+.chip {
+  flex: none;
+  font-size: 23rpx;
+  color: var(--brand-deep, #97400a);
+  background: var(--brand-soft, #fbe7d6);
+  border-radius: 999rpx;
+  padding: 12rpx 22rpx;
+}
+
+.composer {
+  display: flex;
+  align-items: center;
+  gap: 14rpx;
+  padding: 14rpx 24rpx calc(18rpx + env(safe-area-inset-bottom));
+  background: #ffffff;
+  border-top: 1rpx solid var(--line, #f0e3d6);
+}
+.composer-input {
+  flex: 1;
+  min-width: 0;
+  height: 76rpx;
+  padding: 0 24rpx;
+  border-radius: 999rpx;
+  background: var(--bg, #fdf8f2);
+  font-size: 26rpx;
+}
+/* 发送按钮：小程序 button 默认宽 184px，必须三向写死宽高才能真的变小 */
+.composer-send {
+  flex: none;
+  width: 110rpx;
+  min-width: 110rpx;
+  max-width: 110rpx;
+  margin: 0;
+  height: 52rpx;
+  min-height: 0;
+  line-height: 52rpx;
+  padding: 0;
+  font-size: 22rpx;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-align: center;
+  border-radius: 999rpx;
+  background: var(--brand, #b8500f);
+  color: #ffffff;
+  box-sizing: border-box;
+}
+.composer-send::after { border: none; }
+.composer-send.off { background: var(--line-strong, #e3cdb8); }
+
+/* 推荐课程卡：点一下直达课程详情 */
+.course-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+  margin-top: 14rpx;
+}
+.course-card {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  background: #ffffff;
+  border: 1rpx solid #f0e2d2;
+  border-radius: 16rpx;
+  padding: 18rpx 20rpx;
+}
+.course-card-on { background: #fdf3e7; border-color: #e8cfae; }
+.course-icon {
+  font-size: 40rpx;
+  flex: none;
+}
+.course-info {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+}
+.course-title {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #3a2c1e;
+}
+.course-meta {
+  font-size: 22rpx;
+  color: #9b8a76;
+}
+.course-side {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2rpx;
+}
+.course-price {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #b8500f;
+}
+.course-unit {
+  font-size: 20rpx;
+  color: #b3a491;
+}

@@ -1,0 +1,164 @@
+<view class="page" wx:if="{{org}}">
+  <!-- 机构头：标识、认证、成立年份、服务人群 -->
+  <view class="m-hero">
+    <view class="m-head">
+      <view class="m-logo">{{org.logo}}</view>
+      <view class="grow">
+        <view class="m-name-row">
+          <text class="m-name">{{org.name}}</text>
+          <text class="tag tag-ok" wx:if="{{org.verified}}">已认证</text>
+        </view>
+        <view class="m-sub">{{org.foundText}} · {{org.audienceText}}</view>
+      </view>
+    </view>
+    <view class="m-intro" wx:if="{{org.intro}}">{{org.intro}}</view>
+    <view class="m-stats">
+      <view class="m-stat">
+        <text class="m-num">{{org.stats.courseCount}}</text>
+        <text class="m-lab">门课程</text>
+      </view>
+      <view class="m-stat">
+        <text class="m-num">{{org.stats.teacherCount}}</text>
+        <text class="m-lab">位老师</text>
+      </view>
+      <view class="m-stat">
+        <text class="m-num">{{org.stats.packageCount}}</text>
+        <text class="m-lab">个套餐</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 价格区间 -->
+  <view class="card m-price">
+    <view class="between">
+      <text class="m-price-label">课程价格</text>
+      <text class="m-price-value">{{org.priceRangeText}}</text>
+    </view>
+    <view class="muted tiny mt-s">价格以课程页套餐为准，选课前可先咨询</view>
+  </view>
+
+  <!-- 机构评分 -->
+  <view class="card rate" wx:if="{{org.rating && org.rating.count}}">
+    <view class="rate-head">
+      <view class="rate-score">
+        <text class="rate-num">{{org.rating.scoreText}}</text>
+        <view class="rate-side">
+          <view class="stars">
+            <text wx:for="{{org.rating.stars}}" wx:key="key" class="star {{item.on ? 'on' : ''}}">★</text>
+          </view>
+          <text class="rate-count">{{org.rating.countText}}</text>
+        </view>
+      </view>
+      <text class="rate-badge">{{org.rating.level}}</text>
+    </view>
+
+    <view class="rate-dims">
+      <view wx:for="{{org.rating.dims}}" wx:key="key" class="rate-dim">
+        <text class="rate-dim-name">{{item.name}}</text>
+        <view class="rate-bar">
+          <view class="rate-bar-fill" style="width:{{item.width}}%"></view>
+        </view>
+        <text class="rate-dim-score">{{item.scoreText}}</text>
+      </view>
+    </view>
+
+    <view class="rate-reviews" wx:if="{{org.rating.hasReviews}}">
+      <view class="rate-reviews-title">家长评价</view>
+      <view wx:for="{{org.rating.reviews}}" wx:key="key" class="review">
+        <view class="review-avatar">{{item.initial}}</view>
+        <view class="grow">
+          <view class="between">
+            <text class="review-user">{{item.user}}</text>
+            <text class="review-date">{{item.date}}</text>
+          </view>
+          <view class="stars review-stars">
+            <text wx:for="{{item.stars}}" wx:for-item="star" wx:key="key" class="star sm {{star.on ? 'on' : ''}}">★</text>
+          </view>
+          <view class="review-text">{{item.text}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 校区环境 -->
+  <view wx:if="{{org.images.length}}">
+    <view class="section-title">校区环境</view>
+    <scroll-view class="env-scroll" scroll-x enable-flex>
+      <view wx:for="{{org.images}}" wx:key="key" class="env-item tone-{{item.tone}}">
+        <text class="env-icon">{{org.logo}}</text>
+        <view class="env-body">
+          <view class="env-name">{{item.name}}</view>
+          <view class="env-cap" wx:if="{{item.caption}}">{{item.caption}}</view>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 课程 -->
+  <view class="section-title">在售课程</view>
+  <view class="list" wx:if="{{org.courses.length}}">
+    <view wx:for="{{org.courses}}" wx:key="id" class="card course" data-id="{{item.id}}" bindtap="openCourse">
+      <view class="course-icon tone-{{item.tone}}">{{item.icon}}</view>
+      <view class="grow">
+        <view class="between">
+          <text class="course-title">{{item.title}}</text>
+          <text class="price-small">¥{{item.priceText}}</text>
+        </view>
+        <view class="course-meta">{{item.category}}<text wx:if="{{item.unit}}"> · {{item.unit}}</text></view>
+        <view class="row gap-s mt-s" wx:if="{{item.packageCount}}">
+          <text class="mini-tag">{{item.packageCount}} 个套餐可选</text>
+          <text class="mini-tag" wx:if="{{item.tag}}">{{item.tag}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+  <view wx:else class="empty">这家机构还没有上架课程</view>
+
+  <!-- 教师介绍 -->
+  <view wx:if="{{org.teachers.length}}">
+    <view class="section-title">教师介绍</view>
+    <view class="teacher-grid">
+      <view wx:for="{{org.teachers}}" wx:key="key" class="teacher">
+        <view class="teacher-avatar">{{item.initial}}</view>
+        <view class="grow">
+          <view class="teacher-name">{{item.name}}</view>
+          <view class="teacher-subject" wx:if="{{item.subject}}">{{item.subject}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 资质与联系 -->
+  <view class="card">
+    <view class="section-title">资质与联系</view>
+    <view class="info-row" wx:if="{{org.licenses.length}}">
+      <text class="info-label">办学资质</text>
+      <view class="chips">
+        <text wx:for="{{org.licenses}}" wx:key="*this" class="chip">{{item}}</text>
+      </view>
+    </view>
+    <view class="info-row" wx:if="{{org.address}}">
+      <text class="info-label">机构地址</text>
+      <view class="grow">
+        <view class="info-value">{{org.address}}</view>
+        <text class="link tiny" bindtap="copyAddress">复制地址</text>
+      </view>
+    </view>
+    <view class="info-row" wx:if="{{org.contact}}">
+      <text class="info-label">联系人</text>
+      <text class="info-value grow">{{org.contact}}</text>
+    </view>
+    <view class="info-row" wx:if="{{org.phone}}">
+      <text class="info-label">联系电话</text>
+      <text class="info-value grow">{{org.phone}}</text>
+    </view>
+  </view>
+
+  <view class="footer-bar">
+    <button class="btn btn-ghost" bindtap="goDirectory">机构目录</button>
+    <button class="btn grow" bindtap="callPhone">电话咨询</button>
+  </view>
+</view>
+
+<view class="page" wx:elif="{{loading}}"><view class="empty">加载中…</view></view>
+<view class="page" wx:else><view class="empty">机构不存在或已下线</view></view>

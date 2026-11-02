@@ -1,0 +1,106 @@
+<view class="page">
+  <view class="card user" wx:if="{{user}}">
+    <image class="avatar" src="/assets/ip/mascot-side.png" mode="aspectFit" />
+    <view class="grow">
+      <view class="title">{{user.phone}}</view>
+      <view class="muted small">身份：{{roleName}} · ID {{user.id}}</view>
+    </view>
+    <button class="btn btn-ghost btn-sm" bindtap="logout">退出</button>
+  </view>
+
+  <view class="card user" wx:else>
+    <image class="avatar" src="/assets/ip/mascot-rest.png" mode="aspectFit" />
+    <view class="grow">
+      <view class="title">未登录</view>
+      <view class="muted small">登录后可管理学员档案与订单</view>
+    </view>
+    <button class="btn btn-sm" bindtap="goLogin">去登录</button>
+  </view>
+
+  <!-- 学员档案 -->
+  <view class="card" wx:if="{{user}}">
+    <view class="between">
+      <view class="section-title" style="margin: 0">学员档案</view>
+      <button class="btn btn-plain btn-sm" bindtap="addStudent">＋ 添加学员</button>
+    </view>
+    <view class="muted small mt-s">学段选择「高中」后，可使用升学规划参考</view>
+    <view wx:for="{{students}}" wx:key="index" class="line-row">
+      <view class="between">
+        <view class="row gap-s grow">
+          <text class="strong">{{item.name}}</text>
+          <text class="tag tag-muted" wx:if="{{item.stage}}">{{item.stage}}</text>
+          <text class="muted tiny" wx:if="{{item.age}}">{{item.age}} 岁</text>
+          <text class="muted tiny" wx:if="{{item.gender && item.gender !== '未填写'}}">{{item.gender}}</text>
+        </view>
+        <view class="row gap-s">
+          <text class="link small" data-index="{{index}}" bindtap="editStudent">编辑</text>
+          <text class="link small" data-index="{{index}}" bindtap="removeStudent">删除</text>
+        </view>
+      </view>
+      <view class="muted tiny" wx:if="{{item.guardian}}">监护人：{{item.guardian}} · {{item.relation}} · {{item.phone}}</view>
+    </view>
+    <view wx:if="{{!students.length}}" class="empty">还没有学员信息，点击右上角添加</view>
+  </view>
+
+  <!-- 功能入口 -->
+  <view class="card">
+    <view class="menu" bindtap="goLearning"><text>📖 学习资源</text><text class="arrow">›</text></view>
+    <view class="menu" bindtap="goInstitutions"><text>🏛 机构目录</text><text class="arrow">›</text></view>
+    <view class="menu" bindtap="goFeedback"><text>✉ 意见反馈{{feedbackCount ? '（' + feedbackCount + '）' : ''}}</text><text class="arrow">›</text></view>
+    <view class="menu" bindtap="goHelp"><text>？ 帮助中心</text><text class="arrow">›</text></view>
+    <view class="menu" wx:if="{{user && user.role === 'institution'}}" bindtap="goInstitution"><text>🏢 机构工作台</text><text class="arrow">›</text></view>
+    <view class="menu" wx:if="{{user && user.role === 'tutor'}}" bindtap="goCompanion"><text>🧑‍🎓 伴学详情</text><text class="arrow">›</text></view>
+    <view class="menu" wx:if="{{!user || (user && user.role !== 'institution')}}" bindtap="goJoin"><text>＋ 我要入驻</text><text class="arrow">›</text></view>
+    <view class="menu" bindtap="goAdmin"><text>⚙ 平台管理</text><text class="arrow">›</text></view>
+  </view>
+
+  <view class="muted tiny center mt-l">学鹭伴学 · 让每一份成长都有回响</view>
+
+  <!-- 学员编辑弹窗 -->
+  <view class="mask" wx:if="{{showEdit}}" bindtap="closeEdit">
+    <view class="sheet" catchtap="noop">
+      <view class="section-title">{{editing === null || editing === undefined ? '添加学员' : '编辑学员'}}</view>
+      <view class="field">
+        <text class="field-label">姓名</text>
+        <input class="input" value="{{editName}}" data-field="editName" bindinput="onEditField" placeholder="请填写学员姓名" maxlength="30" />
+      </view>
+      <view class="field row gap">
+        <view class="grow">
+          <text class="field-label">年龄</text>
+          <input class="input" type="number" value="{{editAge}}" data-field="editAge" bindinput="onEditField" placeholder="选填" maxlength="2" />
+        </view>
+        <view class="grow">
+          <text class="field-label">性别</text>
+          <picker class="picker" range="{{['男','女','未填写']}}" value="{{editGender === '男' ? 0 : editGender === '女' ? 1 : 2}}" bindchange="onEditGender">{{editGender}}</picker>
+        </view>
+      </view>
+      <view class="field">
+        <text class="field-label">学段</text>
+        <picker class="picker" range="{{stages}}" value="{{stages.indexOf(editStage) >= 0 ? stages.indexOf(editStage) : 0}}" bindchange="onEditStage">{{editStage || '请选择学段'}}</picker>
+      </view>
+      <view class="field row gap">
+        <view class="grow">
+          <text class="field-label">监护人</text>
+          <input class="input" value="{{editGuardian}}" data-field="editGuardian" bindinput="onEditField" placeholder="选填" maxlength="30" />
+        </view>
+        <view class="grow">
+          <text class="field-label">关系</text>
+          <picker class="picker" range="{{['父亲','母亲','家长','祖父母','其他监护人']}}" value="{{['父亲','母亲','家长','祖父母','其他监护人'].indexOf(editRelation) >= 0 ? ['父亲','母亲','家长','祖父母','其他监护人'].indexOf(editRelation) : 2}}" bindchange="onEditRelation">{{editRelation}}</picker>
+        </view>
+      </view>
+      <view class="field">
+        <text class="field-label">监护人手机号</text>
+        <input class="input" type="number" value="{{editPhone}}" data-field="editPhone" bindinput="onEditField" placeholder="选填" maxlength="11" />
+      </view>
+      <view class="row gap mt-l">
+        <button class="btn btn-ghost grow" bindtap="closeEdit">取消</button>
+        <button class="btn grow" bindtap="saveStudent">保存</button>
+      </view>
+    </view>
+  </view>
+
+  <view class="float-assistant" bindtap="openAssistant">
+    <image src="/assets/ip/mascot-front.png" mode="aspectFit" />
+    <text>问鹭鹭</text>
+  </view>
+</view>

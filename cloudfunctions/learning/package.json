@@ -1,0 +1,9 @@
+{
+  "name": "learning",
+  "version": "1.0.0",
+  "description": "学鹭伴学 · 大学生学习资源（考公/考研/考编课程目录）",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~3.0.0"
+  }
+}

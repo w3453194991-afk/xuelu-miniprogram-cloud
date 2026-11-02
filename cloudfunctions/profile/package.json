@@ -1,0 +1,9 @@
+{
+  "name": "profile",
+  "version": "1.0.0",
+  "description": "学鹭伴学 · 学员档案（按账号隔离）",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~3.0.0"
+  }
+}

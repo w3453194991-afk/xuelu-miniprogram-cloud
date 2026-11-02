@@ -1,0 +1,3 @@
+.list { display: flex; flex-direction: column; gap: 18rpx; }
+.item { padding: 22rpx; }
+.right { text-align: right; flex-shrink: 0; padding-left: 16rpx; }

@@ -1,0 +1,148 @@
+.hero {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #c96a24, #b8500f 55%, #97400a);
+  color: #ffffff;
+  border-radius: 26rpx;
+  padding: 34rpx 26rpx 34rpx 30rpx;
+  display: flex;
+  align-items: center;
+  gap: 4rpx;
+  box-shadow: 0 10rpx 30rpx rgba(243, 112, 33, 0.25);
+}
+/* 右上角一团柔光，学鹭落在光里，不贴卡片边 */
+.hero::after {
+  content: '';
+  position: absolute;
+  right: -56rpx;
+  top: -60rpx;
+  width: 300rpx;
+  height: 300rpx;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 246, 235, 0.22), rgba(255, 246, 235, 0));
+  pointer-events: none;
+}
+.hero-text { flex: 1; min-width: 0; position: relative; z-index: 1; }
+.hero-eyebrow {
+  font-size: 18rpx;
+  letter-spacing: 2rpx;
+  opacity: 0.85;
+  margin-bottom: 12rpx;
+}
+.hero-title { font-size: 40rpx; font-weight: 800; line-height: 1.35; margin-bottom: 10rpx; }
+.hero-title-tight { margin-bottom: 10rpx; }
+.hero .muted { color: rgba(255, 255, 255, 0.9); font-size: 24rpx; }
+/* 窝着休息的学鹭：圆形柔光垫底，四周留白，不顶到卡片右边 */
+.hero-ip {
+  flex: none;
+  position: relative;
+  z-index: 1;
+  width: 206rpx;
+  height: 206rpx;
+  margin: 0 10rpx 0 6rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 50% 62%, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0.05) 74%, rgba(255, 255, 255, 0));
+}
+.hero-ip image { width: 192rpx; height: 192rpx; }
+
+.toolbar { display: flex; align-items: center; gap: 16rpx; margin-top: 24rpx; }
+.city {
+  background: #ffffff;
+  border-radius: 999rpx;
+  padding: 14rpx 24rpx;
+  font-size: 26rpx;
+  box-shadow: 0 4rpx 12rpx rgba(120, 76, 40, 0.06);
+  display: flex;
+  gap: 8rpx;
+  flex-shrink: 0;
+}
+.search {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  background: #ffffff;
+  border-radius: 999rpx;
+  padding: 6rpx 6rpx 6rpx 28rpx;
+  box-shadow: 0 4rpx 12rpx rgba(120, 76, 40, 0.06);
+}
+.search input { flex: 1; font-size: 26rpx; height: 56rpx; }
+
+/* 六个入口按 3 × 2 排列 */
+.quick-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+  margin-top: 24rpx;
+}
+.quick {
+  flex: 0 0 calc((100% - 32rpx) / 3);
+  box-sizing: border-box;
+  background: #ffffff;
+  border-radius: 20rpx;
+  padding: 20rpx 12rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6rpx;
+  box-shadow: 0 4rpx 16rpx rgba(120, 76, 40, 0.06);
+}
+.quick-icon { font-size: 40rpx; line-height: 1.2; }
+.quick-name { font-size: 24rpx; color: #6b4a2b; font-weight: 600; }
+.quick-desc {
+  font-size: 19rpx;
+  color: var(--muted, #94897e);
+  line-height: 1.4;
+  text-align: center;
+  padding: 0 4rpx;
+}
+
+.svc { display: flex; gap: 20rpx; align-items: center; }
+.svc-title { font-weight: 700; font-size: 28rpx; max-width: 380rpx; }
+/* 伴学老师：学校 · 专业 一行，星级一行 */
+.tutor-line { font-size: 21rpx; color: var(--brand-deep, #97400a); margin-top: 2rpx; }
+.svc .stars { margin-top: 4rpx; }
+
+/* ---------- 内容区：精选推荐流 ---------- */
+.cards { display: flex; flex-direction: column; gap: 18rpx; }
+.cards .card + .card { margin-top: 0; }
+.chip-sm { padding: 8rpx 20rpx; font-size: 22rpx; }
+.sub-hint {
+  margin: 12rpx 2rpx 0;
+  font-size: 21rpx;
+  color: #94897e;
+}
+
+.feed-group { margin-top: 26rpx; }
+.feed-head { display: flex; align-items: center; gap: 12rpx; margin-bottom: 14rpx; }
+.feed-name { font-size: 30rpx; font-weight: 800; color: #4a382a; }
+.feed-name::before {
+  content: '';
+  display: inline-block;
+  width: 8rpx;
+  height: 26rpx;
+  border-radius: 4rpx;
+  background: var(--brand, #b8500f);
+  margin-right: 12rpx;
+  vertical-align: -3rpx;
+}
+.feed-desc { display: block; font-size: 20rpx; color: #94897e; margin-top: 4rpx; }
+
+/* ---------- 校车线路卡 ---------- */
+.bus { display: flex; flex-direction: column; gap: 14rpx; }
+.bus-icon { font-size: 40rpx; }
+.bus-route {
+  padding: 16rpx 18rpx;
+  border-radius: 16rpx;
+  background: #fdf6ef;
+  border: 1rpx solid #f2e2cf;
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+}
+.bus-stop { font-size: 25rpx; font-weight: 600; color: #6b4a2b; }
+.bus-meta { font-size: 21rpx; color: #8a6a4d; }
+.bus-foot { padding-top: 4rpx; }

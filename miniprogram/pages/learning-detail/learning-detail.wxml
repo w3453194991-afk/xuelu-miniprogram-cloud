@@ -1,0 +1,68 @@
+<view class="page" wx:if="{{view}}">
+  <view class="card hero">
+    <view class="hero-top">
+      <view class="thumb tone-{{view.tone}} big">{{view.icon}}</view>
+      <view class="grow">
+        <view class="path">
+          <text wx:if="{{kindName}}" class="tag">{{kindName}}</text>
+          <text wx:if="{{subject}}" class="muted small">› {{subject}}</text>
+        </view>
+        <view class="title mt-s">{{view.title}}</view>
+        <view class="muted small">🏫 {{view.merchant}}</view>
+      </view>
+    </view>
+    <view class="hero-meta">
+      <text class="price">¥{{view.priceText}}</text>
+      <text class="muted small">/ {{view.unit}}</text>
+      <text class="tag tag-muted">{{view.remainingText}}</text>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="section-title" style="margin-top:0">课程介绍</view>
+    <view class="pre">{{view.description || '课程介绍待完善'}}</view>
+    <view class="line-row row gap-s" wx:if="{{view.location}}">
+      <text class="muted small">上课地点</text>
+      <text class="grow small">{{view.location}}</text>
+    </view>
+    <view class="line-row row gap-s" wx:if="{{view.address}}">
+      <text class="muted small">详细地址</text>
+      <text class="grow small">{{view.address}}</text>
+    </view>
+  </view>
+
+  <view class="card" wx:if="{{view.packages.length}}">
+    <view class="section-title" style="margin-top:0">可选班型</view>
+    <view wx:for="{{view.packages}}" wx:key="key" class="pkg">
+      <view class="between">
+        <text class="strong">{{item.name}}</text>
+        <text class="price-small">¥{{item.priceText}}</text>
+      </view>
+      <view class="muted tiny">{{item.lessons}} 课时 · {{item.description}}</view>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="between" bindtap="goMerchant">
+      <view class="grow">
+        <view class="strong">{{view.merchant.name}}</view>
+        <view class="muted tiny" wx:if="{{view.merchant.intro}}">{{view.merchant.intro}}</view>
+      </view>
+      <text class="link small">机构主页 ›</text>
+    </view>
+    <view class="muted tiny mt-s" wx:if="{{view.merchant.address}}">⌖ {{view.merchant.address}}</view>
+    <view class="muted tiny" wx:if="{{view.merchant.contact}}">联系人：{{view.merchant.contact}}<text wx:if="{{view.merchant.phone}}"> · {{view.merchant.phone}}</text></view>
+    <view class="chips mt-s" wx:if="{{view.merchant.teachers.length}}">
+      <text wx:for="{{view.merchant.teachers}}" wx:key="*this" class="tag tag-muted">{{item}}</text>
+    </view>
+  </view>
+
+  <view class="footer-bar">
+    <button class="btn btn-ghost" bindtap="callPhone">电话咨询</button>
+    <button class="btn grow" bindtap="goBooking">立即报名</button>
+  </view>
+</view>
+
+<view class="page" wx:else>
+  <view class="empty" wx:if="{{!loading}}">课程不存在或已下架</view>
+</view>

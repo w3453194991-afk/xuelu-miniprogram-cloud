@@ -1,0 +1,290 @@
+<view class="page">
+  <!-- 顶部：把档案摘要摆在第一屏 -->
+  <view class="plan-hero">
+    <view class="between">
+      <view class="grow">
+        <view class="plan-eyebrow">升学规划 · PATH TO COLLEGE</view>
+        <view class="plan-title">把想去的学校，拆成今天能做的一步</view>
+      </view>
+      <image class="plan-ip" src="/assets/ip/mascot-study.jpg" mode="aspectFit" />
+    </view>
+    <view class="plan-chips">
+      <text class="pchip">年级 {{profileForm.grade}}</text>
+      <text class="pchip">{{profileForm.province}}</text>
+      <text class="pchip">{{profileForm.first}}<block wx:if="{{profileForm.second.length}}"> + {{profileForm.second.length}} 门</block></text>
+      <text class="pchip">目标 {{profileForm.targetTier}}</text>
+    </view>
+    <view class="plan-note">从初一到高三，档案、曲线、路径、选科、多元升学与关键节点放在同一页<block wx:if="{{updatedText}}"> · 档案更新于 {{updatedText}}</block></view>
+  </view>
+
+  <!-- 六个板块 -->
+  <scroll-view class="plan-tabs" scroll-x enable-flex>
+    <view
+      wx:for="{{tabs}}"
+      wx:key="key"
+      class="plan-tab {{tab === item.key ? 'plan-tab-on' : ''}}"
+      data-tab="{{item.key}}"
+      bindtap="onTab"
+    >{{item.name}}</view>
+  </scroll-view>
+
+  <view wx:if="{{loading}}" class="empty">正在读取你的升学档案…</view>
+  <view wx:elif="{{error}}" class="card plan-error">{{error}}</view>
+
+  <block wx:else>
+    <!-- ---------------- 学生档案 ---------------- -->
+    <block wx:if="{{tab === 'profile'}}">
+      <view class="card mt">
+        <view class="field">
+          <text class="field-label">当前年级</text>
+          <view class="chips">
+            <view wx:for="{{meta.grades}}" wx:key="*this" class="chip {{profileForm.grade === item ? 'chip-on' : ''}}" data-value="{{item}}" bindtap="onGrade">{{item}}</view>
+          </view>
+        </view>
+
+        <picker class="field" mode="selector" range="{{meta.provinces}}" value="{{profileForm.provinceIndex}}" bindchange="onProvince">
+          <view class="field-label">所在省份</view>
+          <view class="picker">{{profileForm.province}}</view>
+        </picker>
+
+        <view class="field">
+          <text class="field-label">首选科目（3+1+2 里的「1」）</text>
+          <view class="chips">
+            <view wx:for="{{meta.firstSubjects}}" wx:key="*this" class="chip {{profileForm.first === item ? 'chip-on' : ''}}" data-value="{{item}}" bindtap="onFirst">{{item}}</view>
+          </view>
+        </view>
+
+        <view class="field">
+          <text class="field-label">再选科目（选 2 门）</text>
+          <view class="chips">
+            <view wx:for="{{meta.secondSubjects}}" wx:key="*this" class="chip {{profileForm.second.indexOf(item) >= 0 ? 'chip-on' : ''}}" data-value="{{item}}" bindtap="onSecond">{{item}}</view>
+          </view>
+          <view class="muted tiny mt-s">已选 {{profileForm.second.length}} / 2 门</view>
+        </view>
+
+        <view class="field">
+          <text class="field-label">目标层次</text>
+          <view class="chips">
+            <view wx:for="{{meta.tiers}}" wx:key="*this" class="chip {{profileForm.targetTier === item ? 'chip-on' : ''}}" data-value="{{item}}" bindtap="onTier">{{item}}</view>
+          </view>
+        </view>
+
+        <view class="field">
+          <text class="field-label">感兴趣的方向（最多 3 个）</text>
+          <view class="chips">
+            <view wx:for="{{meta.interests}}" wx:key="*this" class="chip {{profileForm.interest.indexOf(item) >= 0 ? 'chip-on' : ''}}" data-value="{{item}}" bindtap="onInterest">{{item}}</view>
+          </view>
+        </view>
+
+        <button class="btn btn-block mt" bindtap="saveProfile" disabled="{{saving}}">{{saving ? '保存中…' : '保存档案'}}</button>
+      </view>
+
+      <view class="plan-disclaimer">{{disclaimer}}</view>
+    </block>
+
+    <!-- ---------------- 学业曲线 ---------------- -->
+    <block wx:if="{{tab === 'curve'}}">
+      <view class="plan-stats">
+        <view wx:for="{{gapCards}}" wx:key="key" class="plan-stat">
+          <view class="plan-stat-label">{{item.label}}</view>
+          <view class="plan-stat-value {{item.tone}}">{{item.value}}</view>
+          <view class="plan-stat-hint">{{item.hint}}</view>
+        </view>
+      </view>
+
+      <view class="card mt">
+        <view class="between">
+          <text class="strong">录入一次考试</text>
+          <text class="muted tiny">满分按试卷填</text>
+        </view>
+        <view class="field">
+          <text class="field-label">考试名称</text>
+          <input class="input" value="{{examForm.name}}" bindinput="onExamName" placeholder="例如 高一上学期期中" maxlength="40" />
+        </view>
+        <view class="row gap">
+          <picker class="grow" mode="date" value="{{examForm.date}}" bindchange="onExamDate">
+            <view class="field-label">考试日期</view>
+            <view class="picker">{{examForm.date}}</view>
+          </picker>
+          <view class="grow">
+            <text class="field-label">总分</text>
+            <input class="input" type="digit" value="{{examForm.total}}" bindinput="onExamTotal" placeholder="{{provinceTotal}}" maxlength="3" />
+          </view>
+        </view>
+        <button class="btn btn-block mt" bindtap="addExam" disabled="{{saving}}">{{saving ? '提交中…' : '记录这次成绩'}}</button>
+      </view>
+
+      <view class="section-title">最近记录<text class="muted small" style="font-weight:400"> · 均分取最近 6 次</text></view>
+      <view wx:if="{{examRows.length}}" class="list">
+        <view wx:for="{{examRows}}" wx:key="id" class="card exam-row">
+          <view class="grow">
+            <view class="strong">{{item.name}}</view>
+            <view class="muted tiny">{{item.date}}</view>
+          </view>
+          <text class="exam-score">{{item.total}}</text>
+          <text class="link small" data-id="{{item.id}}" catchtap="removeExam">删除</text>
+        </view>
+      </view>
+      <view wx:else class="empty">还没有成绩记录，录入一次就能看到与目标线的差距</view>
+
+      <view class="plan-disclaimer">{{disclaimer}}</view>
+    </block>
+
+    <!-- ---------------- 路径规划 ---------------- -->
+    <block wx:if="{{tab === 'path'}}">
+      <view class="card mt">
+        <view class="strong">目标拆解</view>
+        <view class="plan-advice">{{gap.advice}}</view>
+        <view class="plan-stats plan-stats-in">
+          <view wx:for="{{gapCards}}" wx:key="key" class="plan-stat plan-stat-mini">
+            <view class="plan-stat-label">{{item.label}}</view>
+            <view class="plan-stat-value {{item.tone}}">{{item.value}}</view>
+          </view>
+        </view>
+        <view class="muted tiny mt-s">{{gap.targetBasis}}</view>
+      </view>
+
+      <view class="section-title">五段路径</view>
+      <view class="stage-rail">
+        <view wx:for="{{stages}}" wx:key="key" class="stage-node stage-{{item.status}}">
+          <view class="stage-dot"></view>
+          <view class="grow">
+            <view class="between">
+              <text class="strong">{{item.name}}</text>
+              <text class="stage-badge">{{item.statusText}}</text>
+            </view>
+            <view class="muted tiny">{{item.range}} · {{item.goal}}</view>
+            <view wx:if="{{item.status === 'current'}}" class="stage-tasks">
+              <view wx:for="{{item.tasks}}" wx:for-item="task" wx:key="title" class="stage-task">
+                <text class="stage-task-title">· {{task.title}}</text>
+                <text class="muted tiny">{{task.detail}}</text>
+              </view>
+              <text wx:if="{{item.moreCount}}" class="link small stage-more" data-key="{{item.key}}" catchtap="toggleStage">{{item.expanded ? '收起' : '展开全部 ' + (item.moreCount + 4) + ' 条'}}</text>
+              <text wx:elif="{{item.expanded}}" class="link small stage-more" data-key="{{item.key}}" catchtap="toggleStage">收起</text>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="muted tiny mt-s">{{stageNote}}</view>
+
+      <view class="card mt-s">
+        <view class="between">
+          <view class="grow">
+            <view class="strong">院校参考</view>
+            <view class="muted tiny">按省份、层次、类型筛院校，看模拟投档线与位次</view>
+          </view>
+          <text class="link small" bindtap="openSchools">去看看 ›</text>
+        </view>
+      </view>
+
+      <view class="plan-disclaimer">{{disclaimer}}</view>
+    </block>
+
+    <!-- ---------------- 选科建议 ---------------- -->
+    <block wx:if="{{tab === 'subjects'}}">
+      <view class="card mt" wx:if="{{subject}}">
+        <view class="between">
+          <text class="strong">{{subject.combination}}</text>
+          <text class="tag tag-ok">覆盖 {{coverageText}}%</text>
+        </view>
+        <view class="plan-advice">可报 {{subject.allowedMajors}} / {{subject.totalMajors}} 个本科专业；12 种组合里排第 {{subject.rank}}。</view>
+        <view class="muted tiny">覆盖率按学科门类的模拟选科规则估算，不代表真实招生目录。</view>
+      </view>
+
+      <view class="section-title">12 种组合对比</view>
+      <view class="list">
+        <view wx:for="{{comboRows}}" wx:key="combination" class="card combo-row {{item.current ? 'combo-on' : ''}}">
+          <view class="grow">
+            <view class="strong">{{item.combination}}<text wx:if="{{item.current}}" class="tag tag-wen" style="margin-left:8rpx">我的组合</text></view>
+            <view class="muted tiny">可报 {{item.allowed}} / {{item.total}} 个专业</view>
+          </view>
+          <view class="combo-bar">
+            <view class="combo-bar-fill" style="width:{{item.coverage}}%"></view>
+          </view>
+          <text class="combo-pct">{{item.coverage}}%</text>
+        </view>
+      </view>
+
+      <view class="plan-disclaimer">{{disclaimer}}</view>
+    </block>
+
+    <!-- ---------------- 多元升学 ---------------- -->
+    <block wx:if="{{tab === 'pathways'}}">
+      <view class="card mt">
+        <view class="field">
+          <text class="field-label">按哪个年级的条件核对</text>
+          <view class="chips">
+            <view class="chip {{pwForm.grade === '' ? 'chip-on' : ''}}" data-value="" bindtap="onPwGrade">用我的档案年级（{{profileForm.grade}}）</view>
+            <view class="chip {{pwForm.grade === '高三' ? 'chip-on' : ''}}" data-value="高三" bindtap="onPwGrade">按高三条件试算</view>
+          </view>
+          <view class="muted tiny mt-s">强基、综评、专项大多在高三申报，高一高二先用「高三条件试算」看自己还缺什么。</view>
+        </view>
+
+        <view class="row gap">
+          <view class="grow">
+            <text class="field-label">高考分数（可不填）</text>
+            <input class="input" type="digit" value="{{pwForm.score}}" bindinput="onPwScore" placeholder="默认用最近均分" maxlength="3" />
+          </view>
+          <view class="grow">
+            <text class="field-label">全省位次（可不填）</text>
+            <input class="input" type="number" value="{{pwForm.rank}}" bindinput="onPwRank" placeholder="留空按模型估算" maxlength="8" />
+          </view>
+        </view>
+        <view class="field">
+          <text class="field-label">竞赛 / 奖项（可不填）</text>
+          <input class="input" value="{{pwForm.award}}" bindinput="onPwAward" placeholder="例如 数学联赛省一" maxlength="40" />
+        </view>
+        <button class="btn btn-block mt" bindtap="loadPathways">重新自查</button>
+        <view class="muted tiny mt-s" wx:if="{{pathways}}">{{pathways.province}} · 特殊类型线 {{pathways.controlLine}} · 本科线 {{pathways.batchLine}}<text wx:if="{{pathways.rankEstimated}}"> · 位次为模型估算</text></view>
+      </view>
+
+      <view wx:if="{{pathwayRows.length}}" class="list mt">
+        <view wx:for="{{pathwayRows}}" wx:key="key" class="card pathway-card">
+          <view class="between">
+            <view class="grow">
+              <view class="strong">{{item.name}}</view>
+              <view class="muted tiny">{{item.tag}}</view>
+            </view>
+            <text class="tag {{item.tone === 'ok' ? 'tag-ok' : (item.tone === 'warn' ? 'tag-warn' : 'tag-muted')}}">{{item.statusText}}</text>
+          </view>
+          <view class="muted tiny mt-s">{{item.summary}}</view>
+          <view class="check-list">
+            <view wx:for="{{item.checks}}" wx:for-item="c" wx:key="item" class="check-row">
+              <text class="check-icon {{c.pass ? 'check-pass' : (c.optional ? 'check-optional' : 'check-fail')}}">{{c.pass ? '✓' : (c.optional ? '○' : '✕')}}</text>
+              <text class="grow small">{{c.item}}</text>
+              <text class="tiny muted">{{c.actual}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view wx:else class="empty">点「重新自查」看看强基、综评、专项等路径是否适合你</view>
+
+      <view class="plan-disclaimer">{{disclaimer}}</view>
+    </block>
+
+    <!-- ---------------- 关键节点 ---------------- -->
+    <block wx:if="{{tab === 'timeline'}}">
+      <view class="between mt">
+        <text class="muted small">{{timelineMeta.from}} 起 {{timelineMeta.count}} 个节点</text>
+        <text class="muted small">已过 {{timelineMeta.passed}} 个</text>
+      </view>
+
+      <view class="timeline mt-s">
+        <view wx:for="{{nodes}}" wx:key="date" class="tl-row {{item.passed ? 'tl-passed' : ''}}">
+          <view class="tl-date">{{item.date}}</view>
+          <view class="tl-line"><view class="tl-dot tl-{{item.type}}"></view></view>
+          <view class="grow tl-body">
+            <view class="between">
+              <text class="strong">{{item.name}}</text>
+              <text class="tiny muted">{{item.daysText}}</text>
+            </view>
+            <view class="muted tiny">{{item.detail}}</view>
+          </view>
+        </view>
+      </view>
+
+      <view class="muted tiny mt-s">{{timelineMeta.note}}</view>
+      <view class="plan-disclaimer">{{disclaimer}}</view>
+    </block>
+  </block>
+</view>

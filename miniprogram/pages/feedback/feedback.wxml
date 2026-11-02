@@ -1,0 +1,59 @@
+<view class="page">
+  <view class="card">
+    <view class="field" style="margin-top:0">
+      <text class="field-label">反馈类型</text>
+      <view class="chips">
+        <view wx:for="{{categories}}" wx:key="*this" class="chip {{category === item ? 'chip-on' : ''}}" data-value="{{item}}" bindtap="onCategory">{{item}}</view>
+      </view>
+    </view>
+
+    <view class="field">
+      <text class="field-label">反馈内容（5–500 字）</text>
+      <textarea class="textarea" value="{{content}}" data-field="content" bindinput="onField" maxlength="500" placeholder="请描述遇到的问题或建议" />
+      <view class="muted tiny right">{{content.length}} / 500</view>
+    </view>
+
+    <view class="field">
+      <text class="field-label">相关订单号（选填）</text>
+      <input class="input" value="{{orderNumber}}" data-field="orderNumber" bindinput="onField" maxlength="30" placeholder="在订单详情可复制订单号" />
+    </view>
+
+    <view class="field">
+      <text class="field-label">联系方式（选填，手机号或邮箱）</text>
+      <input class="input" value="{{contact}}" data-field="contact" bindinput="onField" maxlength="60" placeholder="便于我们回访" />
+    </view>
+
+    <view class="field">
+      <text class="field-label">整体评分（选填）</text>
+      <view class="stars">
+        <text wx:for="{{stars}}" wx:key="*this" class="star {{rating >= item ? 'star-on' : ''}}" data-value="{{item}}" bindtap="onRating">★</text>
+        <text class="muted tiny">{{rating ? rating + ' 分' : '未评分'}}</text>
+      </view>
+    </view>
+
+    <button class="btn btn-block mt" bindtap="submit" disabled="{{submitting}}">{{submitting ? '提交中…' : '提交反馈'}}</button>
+  </view>
+
+  <view class="section-title">我的反馈{{count ? '（' + count + '）' : ''}}</view>
+  <view wx:if="{{!logged}}" class="card">
+    <view class="muted small">登录后可以查看自己提交过的反馈与回复。</view>
+    <button class="btn btn-plain btn-block mt" bindtap="goLogin">去登录</button>
+  </view>
+  <block wx:else>
+    <view class="list">
+      <view wx:for="{{list}}" wx:key="id" class="card">
+        <view class="between">
+          <text class="tag">{{item.category}}</text>
+          <text class="muted tiny">{{item.createdAt}}</text>
+        </view>
+        <view class="small mt-s pre">{{item.content}}</view>
+        <view class="muted tiny mt-s">{{item.statusText}}<text wx:if="{{item.rating}}"> · 评分 {{item.rating}}</text></view>
+        <view wx:if="{{item.reply}}" class="reply mt-s">
+          <text class="muted tiny">平台回复</text>
+          <view class="small pre">{{item.reply}}</view>
+        </view>
+      </view>
+    </view>
+    <view wx:if="{{!list.length}}" class="empty">还没有提交过反馈</view>
+  </block>
+</view>

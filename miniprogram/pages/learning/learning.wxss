@@ -1,0 +1,77 @@
+.head {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  padding: 26rpx 26rpx 22rpx;
+  border-radius: 24rpx;
+  background: linear-gradient(135deg, #fff4e9, #ffe8d4);
+}
+.head-title { font-size: 38rpx; font-weight: 800; color: #4a382a; }
+.head-ip { width: 130rpx; height: 130rpx; flex-shrink: 0; }
+
+.chip-sm { padding: 8rpx 20rpx; font-size: 22rpx; }
+
+.kind-tip {
+  margin: 16rpx 2rpx 0;
+  padding: 14rpx 20rpx;
+  border-radius: 16rpx;
+  background: #fdf3e9;
+  border: 1rpx solid #f2e2cf;
+  color: #8a6a4d;
+  font-size: 22rpx;
+  line-height: 1.6;
+}
+
+.list { display: flex; flex-direction: column; gap: 20rpx; }
+.course { display: flex; gap: 20rpx; }
+.path { display: flex; align-items: center; gap: 8rpx; }
+.path-sep { color: var(--muted, #94897e); }
+.course-title { font-size: 30rpx; font-weight: 700; line-height: 1.4; margin: 6rpx 0 4rpx; }
+.meta { display: flex; flex-wrap: wrap; gap: 14rpx; margin-top: 6rpx; }
+
+/* 继续准备：三张等宽等高的方块，图标居上、文案居中 */
+.quick-row { display: flex; align-items: stretch; gap: 16rpx; }
+.quick {
+  flex: 1 1 0;
+  min-width: 0;
+  box-sizing: border-box;
+  min-height: 232rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8rpx;
+  padding: 24rpx 14rpx 22rpx;
+  border-radius: 20rpx;
+  background: #ffffff;
+  box-shadow: 0 4rpx 16rpx rgba(120, 76, 40, 0.06);
+  text-align: center;
+}
+.quick-icon {
+  width: 76rpx;
+  height: 76rpx;
+  flex: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 34rpx;
+  line-height: 1;
+  background: linear-gradient(135deg, #fdf1e5, #fbdfc6);
+}
+.quick-name {
+  font-size: 26rpx;
+  font-weight: 700;
+  color: #4a382a;
+  line-height: 1.3;
+  margin-top: 4rpx;
+}
+.quick-desc {
+  font-size: 20rpx;
+  line-height: 1.45;
+  color: #94897e;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}

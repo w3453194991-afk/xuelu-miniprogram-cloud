@@ -1,0 +1,6 @@
+.stars { display: flex; align-items: center; gap: 10rpx; }
+.star { font-size: 40rpx; color: #e3cdb8; line-height: 1; }
+.star-on { color: var(--brand, #b8500f); }
+.right { text-align: right; }
+.list { display: flex; flex-direction: column; gap: 16rpx; }
+.reply { background: #faf4ee; border-radius: 14rpx; padding: 16rpx 18rpx; }

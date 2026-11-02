@@ -1,0 +1,4 @@
+.list { display: flex; flex-direction: column; gap: 18rpx; }
+.echo { background: #fff6ee; }
+.uni { display: flex; align-items: center; gap: 12rpx; padding: 22rpx; }
+.uni-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 8rpx; flex-shrink: 0; }

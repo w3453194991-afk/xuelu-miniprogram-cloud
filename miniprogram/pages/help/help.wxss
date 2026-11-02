@@ -1,0 +1,5 @@
+.hero { background: linear-gradient(135deg, #fff7ef, #ffeedd); }
+.hero-ip { width: 120rpx; height: 120rpx; flex-shrink: 0; }
+.list { display: flex; flex-direction: column; gap: 14rpx; }
+.faq { padding: 22rpx 24rpx; }
+.answer { margin-top: 14rpx; color: var(--ink-soft, #6b4a2b); background: #faf4ee; border-radius: 14rpx; padding: 16rpx 18rpx; }

@@ -1,0 +1,96 @@
+<view class="page">
+  <view class="segs">
+    <view class="seg {{tab === 'library' ? 'seg-on' : ''}}" data-tab="library" bindtap="onTab">院校库</view>
+    <view class="seg {{tab === 'wish' ? 'seg-on' : ''}}" data-tab="wish" bindtap="onTab">我的志愿表</view>
+  </view>
+
+  <view class="card mt" wx:if="{{tab === 'library'}}">
+    <view class="row gap">
+      <picker class="grow" mode="selector" range="{{provinces}}" value="{{provinceIndex}}" bindchange="onProvince">
+        <view class="field-label">考生省份</view>
+        <view class="picker">{{province}}</view>
+      </picker>
+      <picker class="grow" mode="selector" range="{{years}}" value="{{yearIndex}}" bindchange="onYear">
+        <view class="field-label">参考年份</view>
+        <view class="picker">{{year}} 年</view>
+      </picker>
+    </view>
+
+    <view class="row gap">
+      <picker class="grow" mode="selector" range="{{tiers}}" value="{{tierIndex}}" bindchange="onTier">
+        <view class="field-label">院校层次</view>
+        <view class="picker">{{tiers[tierIndex]}}</view>
+      </picker>
+      <picker class="grow" mode="selector" range="{{types}}" value="{{typeIndex}}" bindchange="onType">
+        <view class="field-label">院校类型</view>
+        <view class="picker">{{types[typeIndex]}}</view>
+      </picker>
+    </view>
+
+    <view class="field row gap">
+      <input class="input grow" value="{{q}}" bindinput="onKeyword" bindconfirm="onSearch" placeholder="搜索院校名称" confirm-type="search" />
+      <button class="btn btn-sm search-btn" bindtap="onSearch">搜索</button>
+    </view>
+    <picker class="field" mode="selector" range="{{sorts}}" value="{{sortIndex}}" bindchange="onSort">
+      <view class="field-label">排序</view>
+      <view class="picker">{{sorts[sortIndex]}}</view>
+    </picker>
+  </view>
+
+  <block wx:if="{{tab === 'library'}}">
+    <view class="between mt">
+      <text class="muted small">共 {{library.total}} 所院校</text>
+      <text class="muted small" wx:if="{{library.loading}}">加载中…</text>
+    </view>
+    <view class="list mt-s">
+      <view wx:for="{{library.items}}" wx:key="id" class="card uni">
+        <view class="grow" data-id="{{item.id}}" bindtap="openUni">
+          <view class="between">
+            <text class="strong">{{item.name}}</text>
+            <text class="tag tag-muted">{{item.tier}}</text>
+          </view>
+          <view class="muted tiny">{{item.province}} · {{item.type}} · {{item.majorsCount}} 个专业</view>
+          <view class="row gap-s mt-s">
+            <text class="small">分数线 <text class="strong">{{item.line}}</text></text>
+            <text class="small muted">位次 {{item.rank}}</text>
+          </view>
+        </view>
+        <view class="uni-actions">
+          <text class="link small" data-index="{{index}}" catchtap="addWish">加入志愿表</text>
+        </view>
+      </view>
+    </view>
+    <view wx:if="{{!library.items.length && !library.loading}}" class="empty">没有匹配的院校，换个条件试试</view>
+    <view wx:if="{{library.page < library.pages}}" class="muted tiny center mt">上滑加载更多</view>
+  </block>
+
+  <block wx:if="{{tab === 'wish'}}">
+    <view wx:if="{{!logged}}" class="card mt">
+      <view class="muted small">登录后可以保存志愿表，随时回来继续调整。</view>
+      <button class="btn btn-block mt" bindtap="goLogin">去登录</button>
+    </view>
+
+    <block wx:else>
+      <view class="between mt">
+        <text class="muted small">共 {{wishlist.length}} 条 · 最多 60 条</text>
+        <text class="muted small" wx:if="{{!wishLoaded}}">加载中…</text>
+      </view>
+      <view class="list mt-s">
+        <view wx:for="{{wishlist}}" wx:key="key" class="card">
+          <view class="between">
+            <view class="row gap-s">
+              <text class="tag">{{index + 1}}</text>
+              <text class="strong" data-id="{{item.id}}" bindtap="openUni">{{item.name}}</text>
+            </view>
+            <text class="link small" data-index="{{index}}" bindtap="removeWish">移出</text>
+          </view>
+          <view class="muted tiny">
+            <text wx:if="{{item.line !== ''}}">分数线 {{item.line}}</text>
+          </view>
+          <input class="input mt-s" value="{{item.note}}" data-index="{{index}}" bindinput="updateNote" bindblur="saveNotes" placeholder="备注（专业方向、城市偏好等）" maxlength="60" />
+        </view>
+      </view>
+      <view wx:if="{{!wishlist.length}}" class="empty">还没有院校，去院校库添加吧</view>
+    </block>
+  </block>
+</view>

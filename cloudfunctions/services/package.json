@@ -1,0 +1,9 @@
+{
+  "name": "services",
+  "version": "1.0.0",
+  "description": "学鹭伴学 · 服务目录与机构课程",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

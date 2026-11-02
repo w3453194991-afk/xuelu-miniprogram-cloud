@@ -1,0 +1,9 @@
+{
+  "name": "content",
+  "version": "1.0.0",
+  "description": "学鹭伴学 · 静态内容（帮助/关于/联系）",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~3.0.0"
+  }
+}

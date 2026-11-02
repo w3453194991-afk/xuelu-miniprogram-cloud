@@ -1,0 +1,9 @@
+{
+  "name": "institutions",
+  "version": "1.0.0",
+  "description": "学鹭伴学 · 机构目录与资料修改",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~3.0.0"
+  }
+}

@@ -1,0 +1,134 @@
+<view class="page" wx:if="{{uni}}">
+  <view class="card hero">
+    <view class="between">
+      <text class="title">{{uni.name}}</text>
+      <text class="tag">{{uni.tier}}</text>
+    </view>
+    <view class="muted small mt-s">{{uni.province}} · {{uni.city}} · {{uni.type}}类 · {{uni.founded}} 年建校</view>
+    <view class="chips mt-s">
+      <text class="tag tag-muted" wx:if="{{uni.alliance}}">{{uni.alliance}}</text>
+      <text class="tag tag-muted">校友会 {{uni.alumniRank}}</text>
+      <text class="tag tag-muted">软科 {{uni.ruankeRank}}</text>
+    </view>
+    <view class="muted small mt-s">{{uni.intro}}</view>
+  </view>
+
+  <view class="segs mt">
+    <view class="seg {{tab === 'info' ? 'seg-on' : ''}}" data-tab="info" bindtap="onTab">概况</view>
+    <view class="seg {{tab === 'majors' ? 'seg-on' : ''}}" data-tab="majors" bindtap="onTab">专业</view>
+    <view class="seg {{tab === 'lines' ? 'seg-on' : ''}}" data-tab="lines" bindtap="onTab">分数线</view>
+  </view>
+
+  <!-- 概况 -->
+  <view class="card mt" wx:if="{{tab === 'info'}}">
+    <view class="line-row between"><text class="muted small">院校层次</text><text class="small">{{uni.tier}}</text></view>
+    <view class="line-row between"><text class="muted small">院校类型</text><text class="small">{{uni.type}}类</text></view>
+    <view class="line-row between"><text class="muted small">所在省市</text><text class="small">{{uni.province}} · {{uni.city}}</text></view>
+    <view class="line-row between"><text class="muted small">建校年份</text><text class="small">{{uni.founded}} 年</text></view>
+    <view class="line-row between"><text class="muted small">本科专业</text><text class="small">{{uni.majorsCount}} 个</text></view>
+    <view class="line-row between"><text class="muted small">校友会排名</text><text class="small">第 {{uni.alumniRank}} 位</text></view>
+    <view class="line-row between"><text class="muted small">软科中国排名</text><text class="small">第 {{uni.ruankeRank}} 位</text></view>
+  </view>
+
+  <!-- 专业 -->
+  <block wx:if="{{tab === 'majors'}}">
+    <view class="card mt" wx:if="{{majorSeries}}">
+      <view class="between">
+        <text class="strong">{{majorSeries.name}} · 历年趋势</text>
+        <text class="link small" bindtap="closeMajor">收起</text>
+      </view>
+      <view class="grid-table mt-s">
+        <view class="grid-row head-row">
+          <text class="grid-cell">年份</text>
+          <text class="grid-cell">分数线</text>
+          <text class="grid-cell">位次</text>
+          <text class="grid-cell">计划</text>
+        </view>
+        <view wx:for="{{majorSeries.series}}" wx:key="year" class="grid-row">
+          <text class="grid-cell">{{item.year}}</text>
+          <text class="grid-cell">{{item.line}}</text>
+          <text class="grid-cell">{{item.rank}}</text>
+          <text class="grid-cell">{{item.plan}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="list mt">
+      <view wx:for="{{majors}}" wx:key="key" class="card major" data-name="{{item.name}}" bindtap="openMajor">
+        <view class="between">
+          <text class="strong">{{item.name}}</text>
+          <text class="tag tag-muted">{{item.category}}</text>
+        </view>
+        <view class="muted tiny mt-s">
+          分数线 {{item.line}} · 位次 {{item.rank}} · 计划 {{item.plan}} 人
+        </view>
+        <view class="between mt-s">
+          <text class="tiny muted">热度 {{item.heatText}} · {{item.gapText}}</text>
+          <text class="link tiny">趋势 ›</text>
+        </view>
+      </view>
+    </view>
+    <view wx:if="{{!majors.length}}" class="empty">暂无专业数据</view>
+  </block>
+
+  <!-- 分数线 -->
+  <block wx:if="{{tab === 'lines'}}">
+    <view class="card mt">
+      <view class="section-title" style="margin-top:0">全国线（院校最低投档）</view>
+      <view class="grid-table">
+        <view class="grid-row head-row">
+          <text class="grid-cell">年份</text>
+          <text class="grid-cell">最低分</text>
+          <text class="grid-cell">平均分</text>
+        </view>
+        <view wx:for="{{nationalLines}}" wx:key="year" class="grid-row">
+          <text class="grid-cell">{{item.year}}</text>
+          <text class="grid-cell">{{item.line}}</text>
+          <text class="grid-cell">{{item.avg}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="section-title" style="margin-top:0">{{province}} 投档线</view>
+      <view class="grid-table">
+        <view class="grid-row head-row">
+          <text class="grid-cell">年份</text>
+          <text class="grid-cell">投档线</text>
+          <text class="grid-cell">位次</text>
+        </view>
+        <view wx:for="{{provinceLines}}" wx:key="year" class="grid-row">
+          <text class="grid-cell">{{item.year}}</text>
+          <text class="grid-cell">{{item.line}}</text>
+          <text class="grid-cell">{{item.rank}}</text>
+        </view>
+      </view>
+      <view wx:if="{{!provinceLines.length}}" class="empty">暂无该省份数据</view>
+    </view>
+
+    <view class="card">
+      <view class="section-title" style="margin-top:0">各省最低投档线（{{year}} 年）</view>
+      <view class="grid-table">
+        <view class="grid-row head-row">
+          <text class="grid-cell">省份</text>
+          <text class="grid-cell">投档线</text>
+          <text class="grid-cell">位次</text>
+        </view>
+        <view wx:for="{{provinceRows}}" wx:key="province" class="grid-row">
+          <text class="grid-cell">{{item.province}}</text>
+          <text class="grid-cell">{{item.line}}</text>
+          <text class="grid-cell">{{item.rank}}</text>
+        </view>
+      </view>
+    </view>
+  </block>
+
+  <view class="footer-bar">
+    <button class="btn btn-ghost" bindtap="goWishlist">我的志愿表</button>
+    <button class="btn grow" bindtap="addWish" disabled="{{adding}}">加入志愿表</button>
+  </view>
+</view>
+
+<view class="page" wx:else>
+  <view class="empty" wx:if="{{!loading}}">院校资料加载失败</view>
+</view>

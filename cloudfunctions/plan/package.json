@@ -1,0 +1,9 @@
+{
+  "name": "plan",
+  "version": "1.0.0",
+  "description": "学鹭伴学 · 升学规划档案与考试记录",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~3.0.0"
+  }
+}

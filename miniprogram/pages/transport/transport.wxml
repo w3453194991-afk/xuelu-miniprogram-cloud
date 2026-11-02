@@ -1,0 +1,56 @@
+<view class="page">
+  <view class="hero card">
+    <view class="grow">
+      <view class="hero-title">接送板块</view>
+      <view class="muted small">固定线路校车 · 个人帮忙接 · 私家车顺路</view>
+      <view class="hero-safety">
+        <text wx:for="{{safety}}" wx:key="text" class="safety-item">{{item.icon}} {{item.text}}</text>
+      </view>
+    </view>
+    <view class="hero-car">🚌</view>
+  </view>
+
+  <view class="segs">
+    <view wx:for="{{tabs}}" wx:key="id" class="seg {{active === item.id ? 'seg-on' : ''}}" data-id="{{item.id}}" bindtap="onTab">{{item.name}}</view>
+  </view>
+  <view class="sub-hint" wx:if="{{hint}}">{{hint}}</view>
+
+  <view class="cards">
+    <view wx:for="{{rows}}" wx:key="id" class="card bus" data-id="{{item.id}}" bindtap="openDetail">
+      <view class="between">
+        <view class="row gap-s grow">
+          <text class="bus-icon">{{item.icon}}</text>
+          <view class="grow">
+            <text class="svc-title ellipsis">{{item.title}}</text>
+            <view class="muted tiny">{{item.merchant}}<text wx:if="{{item.pickup && item.pickup.vehicle}}"> · {{item.pickup.vehicle}}</text></view>
+          </view>
+        </view>
+        <text class="tag tag-warn" wx:if="{{item.pickup && item.pickup.isCar}}">私家车</text>
+        <text class="tag tag-wen" wx:elif="{{item.lowSeat}}">仅剩 {{item.remaining}}</text>
+        <text class="tag tag-muted" wx:else>余位 {{item.remaining}}</text>
+      </view>
+
+      <view class="bus-route">
+        <text class="bus-stop">{{item.routeText}}</text>
+        <text class="bus-meta" wx:if="{{item.timeText}}">{{item.timeText}}</text>
+        <text class="bus-meta" wx:if="{{item.pickup && item.pickup.school}}">学校 {{item.pickup.school}}<text wx:if="{{item.pickup.childGrade}}"> · 自家孩子 {{item.pickup.childGrade}}</text></text>
+        <text class="bus-meta" wx:if="{{item.pickup && item.pickup.idChecked}}">🪪 {{item.pickup.credit || '已实名核验'}}</text>
+      </view>
+
+      <view class="between bus-foot">
+        <text class="muted tiny" wx:if="{{item.pickup}}">{{item.pickup.area}} · {{item.pickup.seatText}}</text>
+        <text class="muted tiny" wx:else>{{item.location}}</text>
+        <text class="price-small">¥{{item.priceText}}<text class="tiny muted"> /{{item.unit}}</text></text>
+      </view>
+    </view>
+    <view wx:if="{{!rows.length}}" class="empty">这个分类暂时还没有服务</view>
+  </view>
+
+  <view class="join-cta card">
+    <view class="grow">
+      <view class="strong">开私家车接送自家孩子？</view>
+      <view class="muted small">顺路带同校孩子一程，补贴油费，也让同小区家长更省心。入驻须通过实名核验并承诺安全准则。</view>
+    </view>
+    <button class="btn btn-sm" bindtap="goJoin">车主入驻</button>
+  </view>
+</view>

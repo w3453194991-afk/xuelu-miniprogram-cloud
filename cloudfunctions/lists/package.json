@@ -1,0 +1,9 @@
+{
+  "name": "lists",
+  "version": "1.0.0",
+  "description": "学鹭伴学 · 模拟志愿表与报考清单（按账号保存）",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~3.0.0"
+  }
+}

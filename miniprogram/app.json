@@ -1,0 +1,49 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/learning/learning",
+    "pages/orders/orders",
+    "pages/mine/mine",
+    "pages/login/login",
+    "pages/detail/detail",
+    "pages/booking/booking",
+    "pages/learning-detail/learning-detail",
+    "pages/gaokao/gaokao",
+    "pages/gaokao-schools/gaokao-schools",
+    "pages/gaokao-detail/gaokao-detail",
+    "pages/exam/exam",
+    "pages/exam-detail/exam-detail",
+    "pages/institution/institution",
+    "pages/join/join",
+    "pages/companion/companion",
+    "pages/feedback/feedback",
+    "pages/help/help",
+    "pages/institutions/institutions",
+    "pages/merchant/merchant",
+    "pages/admin/admin",
+    "pages/assistant/assistant",
+    "pages/service/service",
+    "pages/transport/transport"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#b8500f",
+    "navigationBarTitleText": "学鹭伴学",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#fdf8f2",
+    "enablePullDownRefresh": false
+  },
+  "tabBar": {
+    "color": "#a28773",
+    "selectedColor": "#b8500f",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "white",
+    "list": [
+      { "pagePath": "pages/index/index", "text": "首页" },
+      { "pagePath": "pages/learning/learning", "text": "学习" },
+      { "pagePath": "pages/orders/orders", "text": "订单" },
+      { "pagePath": "pages/mine/mine", "text": "我的" }
+    ]
+  },
+  "sitemapLocation": "sitemap.json",
+  "style": "v2"
+}

@@ -1,0 +1,76 @@
+.banner {
+  border-radius: 22rpx;
+  padding: 28rpx;
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+}
+.banner-icon { font-size: 64rpx; }
+.banner-title { font-size: 32rpx; font-weight: 800; line-height: 1.35; }
+.banner-sub { font-size: 24rpx; color: #6b4a2b; margin-top: 4rpx; }
+
+.img-block {
+  border-radius: 16rpx;
+  padding: 20rpx;
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  margin-top: 12rpx;
+}
+.img-icon { font-size: 44rpx; }
+
+.pkg-video { width: 100%; border-radius: 14rpx; margin-top: 12rpx; }
+
+/* 伴学老师：头像 + 学校专业 + 星级 */
+.tutor-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 18rpx;
+  padding-bottom: 18rpx;
+  border-bottom: 1rpx solid var(--line, #f0e3d6);
+}
+.tutor-avatar {
+  width: 88rpx; height: 88rpx; flex: none;
+  border-radius: 50%;
+  background: var(--brand-soft, #fbe7d6);
+  color: var(--brand-deep, #97400a);
+  font-size: 34rpx; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+}
+.tutor-name { font-size: 32rpx; font-weight: 800; }
+.tutor-school { font-size: 24rpx; color: var(--ink-soft, #6b4a2b); margin-top: 4rpx; }
+.tutor-intro {
+  font-size: 25rpx;
+  line-height: 1.7;
+  color: var(--ink-soft, #6b4a2b);
+  background: #fdf8f2;
+  border-radius: 14rpx;
+  padding: 18rpx;
+  margin: 18rpx 0 6rpx;
+}
+
+/* 帮忙接：接送人资料 */
+.pickup-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 18rpx;
+  padding-bottom: 18rpx;
+  border-bottom: 1rpx solid var(--line, #f0e3d6);
+}
+.pickup-avatar {
+  width: 88rpx; height: 88rpx; flex: none;
+  border-radius: 50%;
+  background: var(--brand-soft, #fbe7d6);
+  color: var(--brand-deep, #97400a);
+  font-size: 34rpx; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+}
+.pickup-note {
+  font-size: 24rpx;
+  line-height: 1.65;
+  color: var(--ink-soft, #6b4a2b);
+  background: #fdf8f2;
+  border-radius: 14rpx;
+  padding: 16rpx;
+  margin-top: 16rpx;
+}

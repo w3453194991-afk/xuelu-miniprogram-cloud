@@ -1,0 +1,9 @@
+{
+  "name": "exam",
+  "version": "1.0.0",
+  "description": "学鹭伴学 · 考公/考研/考编模拟（确定性模拟数据）",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~3.0.0"
+  }
+}

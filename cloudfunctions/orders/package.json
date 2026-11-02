@@ -1,0 +1,9 @@
+{
+  "name": "orders",
+  "version": "1.0.0",
+  "description": "学鹭伴学 · 订单（下单/模拟支付/取消/核销）",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~3.0.0"
+  }
+}

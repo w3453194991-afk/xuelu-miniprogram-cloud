@@ -1,0 +1,60 @@
+<view class="page">
+  <view class="head">
+    <view class="grow">
+      <view class="head-title">伴学服务</view>
+      <view class="muted small">伴学老师与安心校车，都是双向选择：先看资料，双方合适再成单</view>
+    </view>
+    <image class="head-ip" src="/assets/ip/mascot-rest.png" mode="aspectFit" />
+  </view>
+
+  <view class="segs mt">
+    <view
+      wx:for="{{tabs}}"
+      wx:key="id"
+      class="seg {{tab === item.id ? 'seg-on' : ''}}"
+      data-tab="{{item.id}}"
+      bindtap="onTab"
+    >{{item.name}}</view>
+  </view>
+
+  <view class="banner mt-s">{{tip}}</view>
+
+  <view wx:if="{{loading}}" class="empty">正在加载服务…</view>
+
+  <block wx:elif="{{tab === 'tutor'}}">
+    <view wx:if="{{tutors.length}}" class="list mt">
+      <view wx:for="{{tutors}}" wx:key="id" class="card row gap" data-id="{{item.id}}" bindtap="openDetail">
+        <view class="thumb tone-{{item.tone}}">{{item.icon}}</view>
+        <view class="grow">
+          <view class="between">
+            <text class="strong grow ellipsis">{{item.title}}</text>
+            <text class="price-small">¥{{item.priceText}}<text class="tiny muted">/{{item.unit}}</text></text>
+          </view>
+          <view class="muted tiny mt-s ellipsis">{{item.description}}</view>
+          <view class="muted tiny mt-s">
+            <text wx:if="{{item.slotText}}">🕘 {{item.slotText}}</text>
+            <text wx:else>⌖ {{item.location}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view wx:else class="empty">暂时没有可约的伴学老师</view>
+  </block>
+
+  <block wx:else>
+    <view wx:if="{{buses.length}}" class="list mt">
+      <view wx:for="{{buses}}" wx:key="id" class="card row gap" data-id="{{item.id}}" bindtap="openDetail">
+        <view class="thumb tone-{{item.tone}}">{{item.icon}}</view>
+        <view class="grow">
+          <view class="between">
+            <text class="strong grow ellipsis">{{item.title}}</text>
+            <text class="price-small">¥{{item.priceText}}<text class="tiny muted">/{{item.unit}}</text></text>
+          </view>
+          <view class="muted tiny mt-s ellipsis">{{item.description}}</view>
+          <view class="muted tiny mt-s">⌖ {{item.location}} · 余位 {{item.remainingText}}</view>
+        </view>
+      </view>
+    </view>
+    <view wx:else class="empty">暂时没有可订购的校车线路</view>
+  </block>
+</view>

@@ -1,0 +1,46 @@
+<view class="page" wx:if="{{guest}}">
+  <view class="empty">登录后查看你的订单</view>
+  <button class="btn btn-block" bindtap="goLogin">去登录</button>
+</view>
+
+<view class="page" wx:elif="{{loading}}">
+  <view class="empty">加载中…</view>
+</view>
+
+<view class="page" wx:else>
+  <view class="card stats" wx:if="{{stats}}">
+    <view class="stat"><text class="muted tiny">订单</text><strong>{{stats.total}}</strong></view>
+    <view class="stat"><text class="muted tiny">待支付</text><strong>{{stats.pending}}</strong></view>
+    <view class="stat"><text class="muted tiny">待核销</text><strong>{{stats.paid}}</strong></view>
+    <view class="stat"><text class="muted tiny">交易额</text><strong class="price-small">¥{{stats.amountText}}</strong></view>
+  </view>
+
+  <view class="chips mt">
+    <view wx:for="{{filters}}" wx:key="id" class="chip {{filter === item.id ? 'chip-on' : ''}}" data-id="{{item.id}}" bindtap="onFilter">{{item.name}}</view>
+  </view>
+
+  <view wx:for="{{list}}" wx:key="id" class="card mt">
+    <view class="between">
+      <text class="muted tiny">{{item.number}} · {{item.createdAt}}</text>
+      <text class="tag {{item.statusTone === 'ok' ? 'tag-ok' : item.statusTone === 'warn' ? 'tag-warn' : 'tag-muted'}}">{{item.statusText}}</text>
+    </view>
+    <view class="title mt-s">{{item.title}}</view>
+    <view class="muted small mt-s">
+      <block wx:if="{{item.packageName}}">套餐：{{item.packageName}}<br /></block>
+      学员：{{item.student}} · {{item.phoneMasked}}<br />
+      <block wx:if="{{item.sessionText && item.sessionText !== '—'}}">预约课次：{{item.sessionText}}<br /></block>
+      <block wx:if="{{item.startPoint}}">乘车：{{item.startPoint}} → {{item.endPoint}} · {{item.period}}<br /></block>
+      <block wx:if="{{item.busInfo}}">车辆与司机：{{item.busInfo}}<br /></block>
+      <block wx:if="{{item.code}}">服务核销码：<strong class="link">{{item.code}}</strong></block>
+    </view>
+    <view class="between mt">
+      <text class="price">¥{{item.amountText}}</text>
+      <view class="row gap-s">
+        <button wx:if="{{item.status === 'pending'}}" class="btn btn-ghost btn-sm" data-id="{{item.id}}" bindtap="cancel">取消订单</button>
+        <button wx:if="{{item.status === 'pending'}}" class="btn btn-sm" data-id="{{item.id}}" bindtap="pay">立即支付</button>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{!list.length}}" class="empty">还没有相关订单，去发现一门好课吧</view>
+</view>

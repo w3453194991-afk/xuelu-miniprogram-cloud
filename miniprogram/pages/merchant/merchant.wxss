@@ -1,0 +1,173 @@
+/* 机构主页：头图 / 环境 / 课程 / 教师 / 资质 */
+
+.m-hero {
+  background: linear-gradient(135deg, #fff6ee, #ffeada);
+  border-radius: 26rpx;
+  padding: 28rpx 24rpx 22rpx;
+  box-shadow: 0 6rpx 20rpx rgba(120, 76, 40, 0.07);
+}
+.m-head { display: flex; align-items: center; gap: 20rpx; }
+.m-logo {
+  width: 96rpx; height: 96rpx; flex: none;
+  border-radius: 24rpx;
+  background: #ffffff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 46rpx;
+  box-shadow: 0 4rpx 12rpx rgba(120, 76, 40, 0.08);
+}
+.m-name-row { display: flex; align-items: center; gap: 12rpx; }
+.m-name { font-size: 38rpx; font-weight: 800; color: var(--ink, #4a382a); line-height: 1.3; }
+.m-sub { font-size: 23rpx; color: var(--muted, #94897e); margin-top: 6rpx; }
+.m-intro { font-size: 25rpx; color: var(--ink-soft, #6b4a2b); line-height: 1.65; margin-top: 18rpx; }
+.m-stats {
+  display: flex; margin-top: 22rpx;
+  background: rgba(255, 255, 255, 0.72);
+  border-radius: 18rpx;
+  padding: 16rpx 0;
+}
+.m-stat { flex: 1; display: flex; flex-direction: column; align-items: center; }
+.m-stat + .m-stat { border-left: 1rpx solid var(--line, #f0e3d6); }
+.m-num { font-size: 34rpx; font-weight: 800; color: var(--brand, #b8500f); line-height: 1.2; }
+.m-lab { font-size: 22rpx; color: var(--muted, #94897e); margin-top: 2rpx; }
+
+.m-price { margin-top: 20rpx; display: flex; flex-direction: column; }
+.m-price-label { font-size: 26rpx; color: var(--muted, #94897e); }
+.m-price-value { font-size: 34rpx; font-weight: 800; color: var(--brand, #b8500f); }
+
+/* ---------- 机构评分 ---------- */
+.rate { margin-top: 20rpx; }
+.rate-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 18rpx;
+  border-bottom: 1rpx solid var(--line, #f0e3d6);
+}
+.rate-score { display: flex; align-items: center; gap: 16rpx; }
+.rate-num {
+  font-size: 64rpx;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--brand, #b8500f);
+  letter-spacing: -1rpx;
+}
+.rate-side { display: flex; flex-direction: column; gap: 6rpx; }
+.rate-side .star { font-size: 24rpx; }
+.rate-count { font-size: 21rpx; color: var(--muted, #94897e); }
+.rate-badge {
+  font-size: 21rpx;
+  font-weight: 700;
+  color: #97400a;
+  background: #fbe7d6;
+  border-radius: 999rpx;
+  padding: 8rpx 20rpx;
+}
+.rate-dims { padding: 18rpx 0 6rpx; display: flex; flex-direction: column; gap: 12rpx; }
+.rate-dim { display: flex; align-items: center; gap: 14rpx; }
+.rate-dim-name { width: 72rpx; font-size: 22rpx; color: var(--ink-soft, #6b4a2b); flex: none; }
+.rate-bar {
+  flex: 1;
+  height: 12rpx;
+  border-radius: 999rpx;
+  background: #f4ece3;
+  overflow: hidden;
+}
+.rate-bar-fill {
+  height: 100%;
+  border-radius: 999rpx;
+  background: linear-gradient(90deg, #e8a24a, #b8500f);
+}
+.rate-dim-score { width: 52rpx; text-align: right; font-size: 21rpx; color: var(--brand-deep, #97400a); font-weight: 700; }
+
+.rate-reviews { border-top: 1rpx solid var(--line, #f0e3d6); padding-top: 16rpx; }
+.rate-reviews-title { font-size: 23rpx; font-weight: 700; color: var(--ink, #4a382a); margin-bottom: 6rpx; }
+.review { display: flex; gap: 14rpx; padding: 16rpx 0; }
+.review + .review { border-top: 1rpx dashed #f2e6d9; }
+.review-avatar {
+  width: 56rpx; height: 56rpx; flex: none;
+  border-radius: 50%;
+  background: #fbe7d6;
+  color: #97400a;
+  font-size: 24rpx; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+.review-user { font-size: 23rpx; font-weight: 700; color: var(--ink, #4a382a); }
+.review-date { font-size: 19rpx; color: var(--muted, #94897e); }
+.review-stars { margin: 4rpx 0 6rpx; }
+.review-stars .star { font-size: 18rpx; }
+.review-text { font-size: 22rpx; line-height: 1.65; color: var(--ink-soft, #6b4a2b); }
+
+/* 环境：横向滑动卡片，底部留白避免阴影被裁 */
+.env-scroll { white-space: nowrap; width: 100%; }
+.env-item {
+  display: inline-flex; align-items: flex-end;
+  width: 380rpx; height: 260rpx;
+  margin-right: 16rpx;
+  border-radius: 20rpx;
+  padding: 16rpx;
+  vertical-align: top;
+  position: relative;
+  overflow: hidden;
+}
+.env-icon {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  transform: translate(-50%, -50%);
+  font-size: 104rpx;
+  line-height: 1;
+  opacity: 0.26;
+}
+.env-body {
+  background: rgba(255, 255, 255, 0.86);
+  border-radius: 14rpx;
+  padding: 10rpx 14rpx;
+  max-width: 100%;
+}
+.env-name { font-size: 24rpx; font-weight: 700; color: var(--ink, #4a382a); line-height: 1.4; }
+.env-cap { font-size: 20rpx; color: var(--muted, #94897e); line-height: 1.4; margin-top: 2rpx; }
+
+/* 课程 */
+.list { display: flex; flex-direction: column; gap: 16rpx; }
+.course { display: flex; align-items: flex-start; gap: 18rpx; padding: 22rpx; }
+.course-icon {
+  width: 76rpx; height: 76rpx; flex: none;
+  border-radius: 18rpx;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 36rpx;
+}
+.course-title { font-size: 27rpx; font-weight: 700; line-height: 1.4; flex: 1; min-width: 0; }
+.course-meta { font-size: 22rpx; color: var(--muted, #94897e); margin-top: 4rpx; }
+.mini-tag {
+  font-size: 20rpx; color: var(--brand-deep, #97400a);
+  background: var(--brand-soft, #fbe7d6);
+  border-radius: 8rpx; padding: 2rpx 10rpx;
+}
+
+/* 教师 */
+.teacher-grid { display: flex; flex-wrap: wrap; gap: 16rpx; }
+.teacher {
+  display: flex; align-items: center; gap: 14rpx;
+  width: calc(50% - 8rpx);
+  box-sizing: border-box;
+  background: #ffffff;
+  border-radius: 20rpx;
+  padding: 18rpx;
+  box-shadow: 0 4rpx 16rpx rgba(120, 76, 40, 0.06);
+}
+.teacher-avatar {
+  width: 64rpx; height: 64rpx; flex: none;
+  border-radius: 50%;
+  background: var(--brand-soft, #fbe7d6);
+  color: var(--brand-deep, #97400a);
+  font-size: 27rpx; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+}
+.teacher-name { font-size: 26rpx; font-weight: 700; }
+.teacher-subject { font-size: 21rpx; color: var(--muted, #94897e); margin-top: 2rpx; }
+
+/* 资质与联系 */
+.info-row { display: flex; gap: 20rpx; padding: 14rpx 0; border-bottom: 1rpx solid var(--line, #f0e3d6); }
+.info-row:last-child { border-bottom: none; }
+.info-label { flex: none; width: 130rpx; font-size: 24rpx; color: var(--muted, #94897e); }
+.info-value { font-size: 25rpx; color: var(--ink, #4a382a); line-height: 1.55; }

@@ -1,0 +1,139 @@
+/* 升学规划：六个板块共用一套卡片语言，主色沿用砖橙 */
+.list { display: flex; flex-direction: column; gap: 18rpx; }
+
+.plan-hero {
+  padding: 26rpx 26rpx 22rpx;
+  border-radius: 24rpx;
+  background: linear-gradient(135deg, #fff4e9, #ffe8d4);
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+.plan-eyebrow { font-size: 20rpx; letter-spacing: 2rpx; color: #b8703a; font-weight: 600; }
+.plan-title { font-size: 32rpx; font-weight: 800; line-height: 1.45; color: #4a382a; margin-top: 6rpx; }
+.plan-ip { width: 110rpx; height: 110rpx; border-radius: 18rpx; flex-shrink: 0; }
+.plan-chips { display: flex; flex-wrap: wrap; gap: 12rpx; }
+.pchip {
+  padding: 8rpx 18rpx;
+  border-radius: 999rpx;
+  background: rgba(255, 255, 255, 0.85);
+  color: #97400a;
+  font-size: 22rpx;
+  font-weight: 600;
+}
+.plan-note { font-size: 21rpx; color: #8a6a4d; line-height: 1.6; }
+
+.plan-tabs {
+  display: flex;
+  gap: 12rpx;
+  margin-top: 22rpx;
+  white-space: nowrap;
+  width: 100%;
+}
+.plan-tab {
+  flex: 0 0 auto;
+  padding: 14rpx 24rpx;
+  border-radius: 999rpx;
+  background: #ffffff;
+  border: 1rpx solid #f0e3d6;
+  color: #6b4a2b;
+  font-size: 24rpx;
+}
+.plan-tab-on {
+  background: var(--brand, #b8500f);
+  border-color: var(--brand, #b8500f);
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.plan-error { color: #b4463c; font-size: 26rpx; }
+.plan-disclaimer {
+  margin-top: 24rpx;
+  padding: 16rpx 20rpx;
+  border-radius: 16rpx;
+  background: #fdf3e9;
+  border: 1rpx solid #f2e2cf;
+  color: #8a6a4d;
+  font-size: 21rpx;
+  line-height: 1.6;
+}
+
+/* 统计卡 */
+.plan-stats { display: flex; flex-wrap: wrap; gap: 16rpx; margin-top: 22rpx; }
+.plan-stat {
+  flex: 1 1 calc((100% - 16rpx) / 2);
+  box-sizing: border-box;
+  padding: 20rpx;
+  border-radius: 20rpx;
+  background: #ffffff;
+  box-shadow: 0 4rpx 14rpx rgba(120, 76, 40, 0.06);
+}
+.plan-stats-in { margin-top: 16rpx; }
+.plan-stat-mini { box-shadow: none; background: #fdf6ef; }
+.plan-stat-label { font-size: 21rpx; color: #94897e; }
+.plan-stat-value { font-size: 40rpx; font-weight: 800; color: #4a382a; margin: 6rpx 0 4rpx; }
+.plan-stat-value.pos { color: #1f7a4d; }
+.plan-stat-value.neg { color: #b4463c; }
+.plan-stat-hint { font-size: 20rpx; color: #94897e; line-height: 1.5; }
+
+.plan-advice { font-size: 25rpx; color: #4a382a; line-height: 1.7; margin-top: 14rpx; }
+
+/* 考试记录 */
+.exam-row { display: flex; align-items: center; gap: 16rpx; }
+.exam-score { font-size: 34rpx; font-weight: 800; color: #b8500f; }
+
+/* 五段路径 */
+.stage-rail { display: flex; flex-direction: column; gap: 16rpx; }
+.stage-node { display: flex; gap: 16rpx; padding: 20rpx; border-radius: 20rpx; background: #ffffff; }
+.stage-dot {
+  width: 18rpx; height: 18rpx; border-radius: 50%;
+  margin-top: 10rpx; flex-shrink: 0; background: #e3cdb8;
+}
+.stage-done { opacity: 0.72; }
+.stage-done .stage-dot { background: #d6c3ae; }
+.stage-current {
+  background: linear-gradient(135deg, #fff6ee, #ffeada);
+  border: 1rpx solid #f3ddc6;
+}
+.stage-current .stage-dot { background: #b8500f; box-shadow: 0 0 0 6rpx rgba(184, 80, 15, 0.12); }
+.stage-badge { font-size: 20rpx; color: #94897e; }
+.stage-current .stage-badge { color: #b8500f; font-weight: 700; }
+.stage-tasks { display: flex; flex-direction: column; gap: 10rpx; margin-top: 14rpx; }
+.stage-task { display: flex; flex-direction: column; gap: 2rpx; }
+.stage-task-title { font-size: 24rpx; color: #4a382a; font-weight: 600; }
+.stage-more { margin-top: 8rpx; font-size: 22rpx; }
+
+/* 选科 */
+.combo-row { display: flex; align-items: center; gap: 16rpx; }
+.combo-on { border: 1rpx solid #f0c9a6; background: #fffaf4; }
+.combo-bar { width: 170rpx; height: 12rpx; border-radius: 999rpx; background: #f4efe9; overflow: hidden; flex-shrink: 0; }
+.combo-bar-fill { height: 100%; border-radius: 999rpx; background: linear-gradient(90deg, #e5a266, #b8500f); }
+.combo-pct { font-size: 22rpx; color: #8a6a4d; width: 80rpx; text-align: right; flex-shrink: 0; }
+
+/* 多元升学 */
+.pathway-card { display: flex; flex-direction: column; }
+.check-list { display: flex; flex-direction: column; gap: 8rpx; margin-top: 14rpx; padding-top: 14rpx; border-top: 1rpx dashed #f0e3d6; }
+.check-row { display: flex; align-items: center; gap: 10rpx; }
+.check-icon { font-size: 22rpx; width: 30rpx; text-align: center; flex-shrink: 0; }
+.check-pass { color: #1f7a4d; }
+.check-fail { color: #b4463c; }
+.check-optional { color: #98702d; }
+
+/* 关键节点 */
+.timeline { display: flex; flex-direction: column; }
+.tl-row { display: flex; gap: 14rpx; align-items: stretch; }
+.tl-passed { opacity: 0.55; }
+.tl-date { width: 150rpx; flex-shrink: 0; font-size: 22rpx; color: #8a6a4d; padding: 18rpx 0; }
+.tl-line { width: 24rpx; display: flex; justify-content: center; position: relative; }
+.tl-line::after {
+  content: '';
+  position: absolute; top: 0; bottom: 0; width: 2rpx; background: #f0e3d6; left: 11rpx;
+}
+.tl-dot {
+  width: 14rpx; height: 14rpx; border-radius: 50%;
+  background: #b8500f; margin-top: 26rpx; position: relative; z-index: 1;
+}
+.tl-exam { background: #b4463c; }
+.tl-apply { background: #d99a52; }
+.tl-subject { background: #6b4a2b; }
+.tl-body { padding: 16rpx 0; }

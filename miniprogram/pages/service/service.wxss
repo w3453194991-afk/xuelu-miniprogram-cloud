@@ -1,0 +1,38 @@
+.head { display: flex; align-items: center; gap: 16rpx; }
+.head-title { font-size: 36rpx; font-weight: 800; letter-spacing: 1rpx; }
+.head-ip { width: 120rpx; height: 120rpx; flex-shrink: 0; }
+
+.segs {
+  display: flex;
+  gap: 12rpx;
+  background: var(--chip-bg, #fbe7d6);
+  border-radius: 999rpx;
+  padding: 6rpx;
+}
+.seg {
+  flex: 1;
+  text-align: center;
+  font-size: 26rpx;
+  color: var(--ink-soft, #6b4a2b);
+  padding: 14rpx 0;
+  border-radius: 999rpx;
+}
+.seg-on {
+  background: #ffffff;
+  color: var(--brand, #b8500f);
+  font-weight: 700;
+}
+
+.banner {
+  background: var(--brand-soft, #fbe7d6);
+  color: var(--brand-deep, #97400a);
+  font-size: 23rpx;
+  line-height: 1.6;
+  border-radius: 16rpx;
+  padding: 16rpx 20rpx;
+}
+
+.list { display: flex; flex-direction: column; gap: 20rpx; }
+.card.row { align-items: flex-start; }
+.thumb { margin-top: 4rpx; }
+.card .ellipsis { min-width: 0; }

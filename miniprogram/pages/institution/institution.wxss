@@ -1,0 +1,28 @@
+.status { background: #fff8f1; }
+.list { display: flex; flex-direction: column; gap: 16rpx; }
+.course { padding: 22rpx; }
+
+.mask {
+  position: fixed;
+  inset: 0;
+  background: rgba(40, 28, 18, 0.45);
+  display: flex;
+  align-items: flex-end;
+  z-index: 100;
+}
+.sheet {
+  width: 100%;
+  background: #ffffff;
+  border-radius: 28rpx 28rpx 0 0;
+  padding: 32rpx 28rpx calc(32rpx + env(safe-area-inset-bottom));
+  max-height: 86vh;
+  overflow-y: auto;
+}
+.sheet.tall { max-height: 92vh; }
+
+.pkg-box {
+  border: 1rpx solid var(--line-strong, #e3cdb8);
+  border-radius: 18rpx;
+  padding: 18rpx;
+  margin-top: 14rpx;
+}

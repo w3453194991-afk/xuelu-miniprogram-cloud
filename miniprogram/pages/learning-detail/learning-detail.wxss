@@ -1,0 +1,10 @@
+.hero-top { display: flex; gap: 22rpx; }
+.thumb.big { width: 140rpx; height: 140rpx; font-size: 64rpx; border-radius: 26rpx; }
+.hero-meta { display: flex; align-items: baseline; gap: 12rpx; margin-top: 22rpx; }
+.path { display: flex; align-items: center; gap: 8rpx; }
+
+.pkg {
+  padding: 18rpx 0;
+  border-bottom: 1rpx solid var(--line, #f0e3d6);
+}
+.pkg:last-child { border-bottom: none; }

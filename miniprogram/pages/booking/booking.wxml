@@ -1,0 +1,126 @@
+<view class="page">
+  <view class="card">
+    <view class="between">
+      <view class="grow">
+        <view class="title ellipsis">{{title}}</view>
+        <view class="muted small">{{type === 'course' ? '精品课程' : type === 'tutor' ? '优选伴学' : '安心校车'}} · 余位 {{remaining}}</view>
+      </view>
+      <view class="price">¥{{amountText}}</view>
+    </view>
+    <view wx:if="{{type === 'tutor' && sessions.length}}" class="muted small mt-s">已选 {{sessions.length}} 个课次（按课次计价）</view>
+    <view wx:if="{{type === 'course' && packageId}}" class="muted small mt-s">按所选套餐计价</view>
+  </view>
+
+  <view class="card">
+    <view class="section-title">报名信息</view>
+    <view class="field">
+      <text class="field-label">学生姓名</text>
+      <input class="input" value="{{student}}" data-field="student" bindinput="onField" placeholder="请填写学生姓名" maxlength="30" />
+    </view>
+    <view class="field">
+      <text class="field-label">监护人手机号</text>
+      <input class="input" value="{{phone}}" data-field="phone" bindinput="onField" placeholder="11 位手机号" type="number" maxlength="11" />
+    </view>
+    <view class="field row gap">
+      <view class="grow">
+        <text class="field-label">学员年龄</text>
+        <input class="input" value="{{age}}" data-field="age" bindinput="onField" type="number" placeholder="选填" maxlength="2" />
+      </view>
+      <view class="grow">
+        <text class="field-label">性别</text>
+        <picker class="picker" range="{{genders}}" value="{{genders.indexOf(gender) >= 0 ? genders.indexOf(gender) : 2}}" bindchange="onGenderChange">
+          {{gender}}
+        </picker>
+      </view>
+    </view>
+    <view class="field row gap">
+      <view class="grow">
+        <text class="field-label">监护人称呼</text>
+        <input class="input" value="{{guardian}}" data-field="guardian" bindinput="onField" placeholder="选填" maxlength="30" />
+      </view>
+      <view class="grow">
+        <text class="field-label">与学员关系</text>
+        <picker class="picker" range="{{relations}}" value="{{relations.indexOf(relation) >= 0 ? relations.indexOf(relation) : 2}}" bindchange="onRelationChange">
+          {{relation || '家长'}}
+        </picker>
+      </view>
+    </view>
+    <view class="field">
+      <text class="field-label">备用手机号</text>
+      <input class="input" value="{{guardianPhone}}" data-field="guardianPhone" bindinput="onField" placeholder="选填" type="number" maxlength="11" />
+    </view>
+    <view class="field">
+      <text class="field-label">联系地址</text>
+      <input class="input" value="{{address}}" data-field="address" bindinput="onField" placeholder="选填" maxlength="200" />
+    </view>
+  </view>
+
+  <!-- 课程：套餐 + 上课日期 -->
+  <view class="card" wx:if="{{type === 'course' && packages.length}}">
+    <view class="section-title">选择套餐</view>
+    <view wx:for="{{packages}}" wx:key="key" class="pkg {{packageId === item.id ? 'pkg-on' : ''}}" data-index="{{index}}" bindtap="onPackageChange">
+      <view class="between">
+        <text class="strong">{{item.name}}</text>
+        <text class="price-small">¥{{item.priceText}}</text>
+      </view>
+      <view class="muted small">{{item.lessons}} 课次 · {{item.description}}</view>
+    </view>
+    <view class="field">
+      <text class="field-label">上课日期（选填）</text>
+      <picker mode="date" value="{{date}}" data-field="date" bindchange="onField">
+        <view class="picker">{{date || '选择日期'}}</view>
+      </picker>
+    </view>
+  </view>
+
+  <!-- 伴学：日期 + 可约时段 -->
+  <view class="card" wx:if="{{type === 'tutor'}}">
+    <view class="section-title">预约日期与课次</view>
+    <view class="field">
+      <text class="field-label">预约日期</text>
+      <picker mode="date" value="{{pickedDate}}" bindchange="onDateChange">
+        <view class="picker">{{pickedDate || '选择日期'}}</view>
+      </picker>
+    </view>
+    <view class="muted small mt-s">仅展示与所选日期星期一致的可约时段，每个时段 1 小时</view>
+    <view class="chips mt">
+      <view wx:for="{{slots}}" wx:key="slot" class="chip {{item.available ? '' : 'chip-off'}} {{item.picked ? 'chip-on' : ''}}"
+        data-slot="{{item.slot}}" data-disabled="{{item.available ? '' : '1'}}" bindtap="toggleSlot">
+        {{item.slot}}{{item.available ? '' : '（已约）'}}
+      </view>
+    </view>
+    <view wx:if="{{!slots.length && pickedDate}}" class="empty">当天没有可约时段，换一个日期试试</view>
+    <view class="banner mt" wx:if="{{sessions.length}}">已选 {{sessions.length}} 个课次 · 合计 {{sessions.length}} 小时 · ¥{{amountText}}</view>
+  </view>
+
+  <!-- 校车：上下车站点 + 周期 -->
+  <view class="card" wx:if="{{type === 'bus'}}">
+    <view class="section-title">乘车安排</view>
+    <view class="field">
+      <text class="field-label">上车站点</text>
+      <picker range="{{starts}}" bindchange="onStartChange">
+        <view class="picker">{{startPoint || '选择上车站点'}}</view>
+      </picker>
+    </view>
+    <view class="field">
+      <text class="field-label">下车站点</text>
+      <picker range="{{ends}}" bindchange="onEndChange">
+        <view class="picker">{{endPoint || (startPoint ? '选择下车站点' : '请先选择上车站点')}}</view>
+      </picker>
+    </view>
+    <view class="field" wx:if="{{periods.length > 1}}">
+      <text class="field-label">订购周期</text>
+      <picker range="{{periods}}" value="{{periods.indexOf(period)}}" data-field="period" bindchange="onField">
+        <view class="picker">{{period}}</view>
+      </picker>
+    </view>
+  </view>
+
+  <view class="footer-bar">
+    <view class="grow">
+      <view class="price">¥{{amountText}}</view>
+      <view class="muted tiny">提交后在我的订单完成支付</view>
+    </view>
+    <button class="btn" loading="{{submitting}}" bindtap="submit">提交订单</button>
+  </view>
+</view>

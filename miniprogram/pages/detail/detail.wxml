@@ -1,0 +1,149 @@
+<view class="page" wx:if="{{view}}">
+  <view class="banner tone-{{view.tone}}">
+    <text class="banner-icon">{{view.icon}}</text>
+    <view class="grow">
+      <view class="banner-title">{{view.title}}</view>
+      <view class="banner-sub">{{view.category}} · {{view.merchantName}}</view>
+    </view>
+    <text class="tag" wx:if="{{view.tag}}">{{view.tag}}</text>
+  </view>
+
+  <view class="card">
+    <view class="between">
+      <text class="price">¥{{view.priceText}}<text class="small muted"> /{{view.unit}}</text></text>
+      <text class="muted small">{{view.type === 'tutor' ? '预约后锁定所选时段' : '剩余名额 ' + view.remaining}}</text>
+    </view>
+    <view class="muted mt-s">⌖ {{view.location}} · {{view.city}}</view>
+    <view class="pre mt">{{view.description}}</view>
+  </view>
+
+  <view class="card" wx:if="{{view.images.length}}">
+    <view class="section-title">课程现场</view>
+    <view wx:for="{{view.images}}" wx:key="key" class="img-block tone-{{item.tone}}">
+      <text class="img-icon">{{view.icon}}</text>
+      <view class="grow">
+        <view class="strong">{{item.name}}</view>
+        <view class="muted small" wx:if="{{item.caption}}">{{item.caption}}</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="card" wx:if="{{view.packages.length}}">
+    <view class="section-title">课程套餐</view>
+    <view wx:for="{{view.packages}}" wx:key="key" class="line-row">
+      <view class="between">
+        <text class="strong">{{item.name}}</text>
+        <text class="price-small">¥{{item.priceText}}</text>
+      </view>
+      <view class="muted small">{{item.lessons}} 课次</view>
+      <view class="small" wx:if="{{item.description}}">{{item.description}}</view>
+      <video wx:if="{{item.src}}" class="pkg-video" src="{{item.src}}" controls show-mute-btn></video>
+    </view>
+  </view>
+
+  <view class="card" wx:if="{{view.tutor}}">
+    <view class="section-title">伴学老师</view>
+    <view class="tutor-head">
+      <view class="tutor-avatar">{{view.tutor.initial}}</view>
+      <view class="grow">
+        <view class="row gap-s">
+          <text class="tutor-name">{{view.tutor.name}}</text>
+          <text class="tag tag-muted" wx:if="{{view.tutor.education}}">{{view.tutor.education}}</text>
+        </view>
+        <view class="tutor-school">{{view.tutor.school}}<text wx:if="{{view.tutor.major}}"> · {{view.tutor.major}}</text></view>
+        <view class="stars mt-s" wx:if="{{view.tutor.score}}">
+          <text wx:for="{{view.tutor.stars}}" wx:for-item="star" wx:key="key" class="star {{star.on ? 'on' : ''}}">★</text>
+          <text class="score-text">{{view.tutor.scoreText}}</text>
+          <text class="count-text">{{view.tutor.countText}}</text>
+        </view>
+        <view class="count-text" wx:else>暂无评价</view>
+      </view>
+    </view>
+
+    <view class="tutor-intro" wx:if="{{view.tutor.intro}}">{{view.tutor.intro}}</view>
+
+    <view class="line-row between"><text class="muted">就读学校</text><text>{{view.tutor.school}}</text></view>
+    <view class="line-row between" wx:if="{{view.tutor.major}}"><text class="muted">所学专业</text><text>{{view.tutor.major}}</text></view>
+    <view class="line-row between"><text class="muted">学历</text><text>{{view.tutor.education}}</text></view>
+    <view class="line-row between"><text class="muted">适教说明</text><text>{{view.tutor.grades}}</text></view>
+    <view class="line-row between"><text class="muted">资质核验</text><text>{{view.tutor.certificate}}</text></view>
+    <view class="line-row"><text class="muted">伴学方向</text><view class="chips mt-s"><text wx:for="{{view.tutor.subjects}}" wx:key="*this" class="chip">{{item}}</text></view></view>
+    <view class="line-row"><text class="muted">服务方式</text><view class="chips mt-s"><text wx:for="{{view.tutor.methods}}" wx:key="*this" class="chip">{{item}}</text></view></view>
+    <view class="line-row"><text class="muted">经历</text><text class="small">{{view.tutor.experience}}</text></view>
+    <view class="banner mt" wx:if="{{view.slotNote}}">{{view.slotNote}}</view>
+  </view>
+
+  <view class="card" wx:if="{{view.bus && !view.bus.pickup}}">
+    <view class="section-title">线路与时刻</view>
+    <view class="line-row between"><text class="muted">驾驶员</text><text>{{view.bus.driver}}</text></view>
+    <view class="line-row between"><text class="muted">车牌</text><text>{{view.bus.plate}}</text></view>
+    <view class="line-row between"><text class="muted">车型</text><text>{{view.bus.vehicle}}</text></view>
+    <view class="section-title">经停站点</view>
+    <view wx:for="{{view.bus.routes}}" wx:key="key" class="line-row between">
+      <text>{{item.name}}</text>
+      <text class="muted small">到 {{item.arrival}} · 发 {{item.departure}}</text>
+    </view>
+  </view>
+
+  <!-- 帮忙接 / 私家车：个人顺路接送 -->
+  <view class="card" wx:if="{{view.bus.pickup}}">
+    <view class="section-title">{{view.bus.pickup.isCar ? '私家车 · 车主资料' : '帮忙接 · 接送人资料'}}</view>
+    <view class="pickup-head">
+      <view class="pickup-avatar">{{view.bus.pickup.initial}}</view>
+      <view class="grow">
+        <view class="row gap-s">
+          <text class="strong">{{view.bus.pickup.person}}</text>
+          <text class="tag tag-muted" wx:if="{{view.bus.pickup.gender}}">{{view.bus.pickup.gender}}</text>
+          <text class="tag tag-warn" wx:if="{{view.bus.pickup.isCar}}">私家车家长</text>
+        </view>
+        <view class="muted small">{{view.bus.pickup.yearsText}} · {{view.bus.pickup.area}}</view>
+        <view class="tag tag-ok mt-s" wx:if="{{view.bus.pickup.idChecked}}">{{view.bus.pickup.credit}}</view>
+      </view>
+    </view>
+
+    <view class="line-row between"><text class="muted">接送学校</text><text>{{view.bus.pickup.school}}</text></view>
+    <view class="line-row between" wx:if="{{view.bus.pickup.childGrade}}"><text class="muted">自家孩子</text><text>{{view.bus.pickup.childGrade}} · 同校顺路</text></view>
+    <view class="line-row between" wx:if="{{view.bus.pickup.schoolGate}}"><text class="muted">接送点</text><text>{{view.bus.pickup.schoolGate}}</text></view>
+    <view class="line-row between"><text class="muted">接送时段</text><text class="small">{{view.bus.pickup.timeText}}</text></view>
+    <view class="line-row between" wx:if="{{view.bus.pickup.vehicle}}"><text class="muted">接送方式</text><text>{{view.bus.pickup.vehicle}}</text></view>
+    <view class="line-row between"><text class="muted">可接人数</text><text>{{view.bus.pickup.seat}} 人（已接 {{view.bus.pickup.used}}，{{view.bus.pickup.seatText}}）</text></view>
+    <view class="pickup-note" wx:if="{{view.bus.pickup.note}}">{{view.bus.pickup.note}}</view>
+
+    <view class="section-title">接送流程</view>
+    <view wx:for="{{view.bus.routes}}" wx:key="key" class="line-row between">
+      <text>{{item.name}}</text>
+      <text class="muted small">到 {{item.arrival}} · 离 {{item.departure}}</text>
+    </view>
+  </view>
+
+  <view class="card" wx:if="{{view.merchant && view.merchant.name}}">
+    <view class="section-title">机构与师资</view>
+    <view class="line-row between">
+      <view class="row gap-s">
+        <text class="strong">{{view.merchant.name}}</text>
+        <text class="tag tag-ok" wx:if="{{view.merchant.verified}}">已认证</text>
+      </view>
+      <text class="link small" bindtap="goMerchant" wx:if="{{view.type === 'course'}}">机构主页 ↗</text>
+    </view>
+    <view class="small mt-s" wx:if="{{view.merchant.intro}}">{{view.merchant.intro}}</view>
+    <view class="line-row between mt-s"><text class="muted">地址</text><text class="small">{{view.merchant.address}}</text></view>
+    <view class="line-row between"><text class="muted">联系人</text><text class="small">{{view.merchant.contact}} {{view.merchant.phone}}</text></view>
+    <view class="line-row" wx:if="{{view.merchant.teachers.length}}">
+      <text class="muted">师资</text>
+      <view class="chips mt-s"><text wx:for="{{view.merchant.teachers}}" wx:key="*this" class="chip">{{item}}</text></view>
+    </view>
+    <view class="line-row" wx:if="{{view.merchant.licenses.length}}">
+      <text class="muted">资质</text>
+      <view class="chips mt-s"><text wx:for="{{view.merchant.licenses}}" wx:key="*this" class="chip">{{item}}</text></view>
+    </view>
+  </view>
+
+  <view class="footer-bar">
+    <view class="grow">
+      <text class="price">¥{{view.priceText}}</text>
+      <text class="muted small"> /{{view.unit}}</text>
+    </view>
+    <button class="btn" bindtap="goBooking">立即报名</button>
+  </view>
+</view>
+<view class="page" wx:elif="{{loading}}"><view class="empty">加载中…</view></view>

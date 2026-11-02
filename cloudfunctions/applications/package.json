@@ -1,0 +1,9 @@
+{
+  "name": "applications",
+  "version": "1.0.0",
+  "description": "学鹭伴学 · 入驻申请（提交/我的/平台审批）",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~3.0.0"
+  }
+}

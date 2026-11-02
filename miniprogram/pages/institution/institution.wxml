@@ -1,0 +1,191 @@
+<view class="page">
+  <view class="card" wx:if="{{!logged}}">
+    <view class="strong">机构工作台</view>
+    <view class="muted small mt-s">请使用机构账号登录后管理课程与机构资料。</view>
+    <button class="btn btn-block mt" bindtap="goLogin">去登录</button>
+  </view>
+
+  <view class="card" wx:elif="{{!isInstitution}}">
+    <view class="strong">当前账号不是机构账号</view>
+    <view class="muted small mt-s">如需发布课程，请使用机构类型账号登录并完成入驻。</view>
+  </view>
+
+  <block wx:elif="{{ready}}">
+    <!-- 审核状态 -->
+    <view class="card status" wx:if="{{status !== 'approved'}}">
+      <view class="between">
+        <text class="strong">入驻状态</text>
+        <text class="tag {{status === 'pending' ? 'tag-warn' : 'tag-muted'}}">{{statusText}}</text>
+      </view>
+      <view class="muted small mt-s" wx:if="{{status === 'pending'}}">资料已提交，审核通过后即可发布课程。</view>
+      <view class="muted small mt-s" wx:else>完成入驻并通过审核后，就可以在这里发布与管理课程。</view>
+      <button class="btn btn-block mt" bindtap="goJoin">{{status === 'pending' ? '查看入驻资料' : '去入驻'}}</button>
+    </view>
+
+    <block wx:if="{{org}}">
+      <view class="card">
+        <view class="between">
+          <view>
+            <view class="strong">{{org.name}}</view>
+            <view class="muted tiny">{{org.courseCount}} 门课程 · {{org.address || '地址待完善'}}</view>
+          </view>
+          <text class="link small" bindtap="openOrg">编辑资料</text>
+        </view>
+        <view class="muted small mt-s" wx:if="{{org.intro}}">{{org.intro}}</view>
+      </view>
+
+      <view class="between mt">
+        <text class="section-title" style="margin:0">我的课程</text>
+        <button class="btn btn-plain btn-sm" bindtap="openCreate" wx:if="{{status === 'approved'}}">＋ 发布课程</button>
+      </view>
+
+      <view class="list mt-s">
+        <view wx:for="{{courses}}" wx:key="id" class="card course">
+          <view class="between">
+            <text class="strong grow ellipsis">{{item.title}}</text>
+            <text class="price-small">¥{{item.price}}<text class="tiny muted"> /{{item.unit}}</text></text>
+          </view>
+          <view class="muted tiny mt-s">
+            {{item.category}} · 余位 {{item.remaining}} · {{item.packageCount}} 个套餐
+            <text wx:if="{{item.learningName}}"> · {{item.learningName}}</text>
+            · 服务人群 {{org.audienceText}}
+          </view>
+          <view class="row gap mt-s">
+            <button class="btn btn-ghost btn-sm" data-id="{{item.id}}" bindtap="previewCourse">预览</button>
+            <button class="btn btn-plain btn-sm" data-id="{{item.id}}" bindtap="openEdit">编辑</button>
+          </view>
+        </view>
+      </view>
+      <view wx:if="{{!courses.length}}" class="empty">还没有课程，点击右上角发布第一门课</view>
+    </block>
+  </block>
+
+  <!-- 机构资料编辑 -->
+  <view class="mask" wx:if="{{showOrg}}" bindtap="closeOrg">
+    <view class="sheet" catchtap="noop">
+      <view class="section-title" style="margin-top:0">编辑机构资料</view>
+      <view class="field">
+        <text class="field-label">机构简介</text>
+        <textarea class="textarea" value="{{orgForm.intro}}" data-field="intro" bindinput="onOrgField" maxlength="500" placeholder="介绍机构特色与教学方向" />
+      </view>
+      <view class="field">
+        <text class="field-label">地址</text>
+        <input class="input" value="{{orgForm.address}}" data-field="address" bindinput="onOrgField" maxlength="200" placeholder="详细地址" />
+      </view>
+      <view class="field row gap">
+        <view class="grow">
+          <text class="field-label">联系人</text>
+          <input class="input" value="{{orgForm.contact}}" data-field="contact" bindinput="onOrgField" maxlength="40" placeholder="联系人姓名" />
+        </view>
+        <view class="grow">
+          <text class="field-label">联系电话</text>
+          <input class="input" value="{{orgForm.phone}}" data-field="phone" bindinput="onOrgField" maxlength="30" placeholder="电话" />
+        </view>
+      </view>
+      <view class="field">
+        <text class="field-label">服务人群</text>
+        <view class="muted tiny">可多选：家长看到的课程页与大学生看到的学习资源页会按这里分区展示。</view>
+        <view class="audience-options">
+          <view
+            wx:for="{{orgAudience}}"
+            wx:key="value"
+            class="audience-option {{item.on ? 'on' : ''}}"
+            data-value="{{item.value}}"
+            bindtap="toggleOrgAudience"
+          >
+            <view class="audience-box">{{item.on ? '✓' : ''}}</view>
+            <view class="audience-text">
+              <view class="strong small">{{item.value}}</view>
+              <view class="muted tiny">{{item.hint}}</view>
+            </view>
+          </view>
+        </view>
+      </view>
+      <button class="btn btn-block mt" bindtap="saveOrg" disabled="{{savingOrg}}">{{savingOrg ? '保存中…' : '保存'}}</button>
+    </view>
+  </view>
+
+  <!-- 课程编辑 -->
+  <view class="mask" wx:if="{{showForm}}" bindtap="closeForm">
+    <view class="sheet tall" catchtap="noop">
+      <view class="section-title" style="margin-top:0">{{creating ? '发布课程' : '编辑课程'}}</view>
+
+      <view class="field">
+        <text class="field-label">课程名称</text>
+        <input class="input" value="{{form.title}}" data-field="title" bindinput="onField" maxlength="40" placeholder="如 考研数学 · 强化提高班" />
+      </view>
+
+      <view class="field row gap">
+        <view class="grow">
+          <text class="field-label">分类</text>
+          <input class="input" value="{{form.category}}" data-field="category" bindinput="onField" maxlength="100" placeholder="如 考研辅导" />
+        </view>
+        <view class="grow">
+          <text class="field-label">标签</text>
+          <input class="input" value="{{form.tag}}" data-field="tag" bindinput="onField" maxlength="100" placeholder="如 备考推荐" />
+        </view>
+      </view>
+
+      <view class="field row gap">
+        <view class="grow">
+          <text class="field-label">价格（元）</text>
+          <input class="input" type="digit" value="{{form.price}}" data-field="price" bindinput="onField" maxlength="8" placeholder="如 1280" />
+        </view>
+        <view class="grow">
+          <text class="field-label">计价单位</text>
+          <input class="input" value="{{form.unit}}" data-field="unit" bindinput="onField" maxlength="100" placeholder="如 16课时" />
+        </view>
+      </view>
+
+      <view class="field row gap">
+        <view class="grow">
+          <text class="field-label">余位</text>
+          <input class="input" type="number" value="{{form.remaining}}" data-field="remaining" bindinput="onField" maxlength="5" placeholder="10" />
+        </view>
+        <view class="grow">
+          <text class="field-label">上课地点</text>
+          <input class="input" value="{{form.location}}" data-field="location" bindinput="onField" maxlength="100" placeholder="如 南岗区 · 学府路" />
+        </view>
+      </view>
+
+      <view class="field">
+        <text class="field-label">课程介绍</text>
+        <textarea class="textarea" value="{{form.description}}" data-field="description" bindinput="onField" maxlength="1000" placeholder="课程内容、适合人群、上课安排" />
+      </view>
+
+      <view class="field row gap">
+        <view class="grow">
+          <text class="field-label">备考方向（选填）</text>
+          <picker mode="selector" range="{{learningNames}}" value="{{learningKindIndex}}" bindchange="onLearningKind">
+            <view class="picker">{{learningNames[learningKindIndex]}}</view>
+          </picker>
+        </view>
+        <view class="grow" wx:if="{{subjects.length}}">
+          <text class="field-label">科目</text>
+          <picker mode="selector" range="{{subjects}}" value="{{subjectIndex}}" bindchange="onSubject">
+            <view class="picker">{{subjects[subjectIndex]}}</view>
+          </picker>
+        </view>
+      </view>
+      <view class="muted tiny">设置备考方向后，课程会出现在「学习资源」对应科目下。</view>
+
+      <view class="section-title">套餐（选填）</view>
+      <view wx:for="{{form.packages}}" wx:key="index" class="pkg-box">
+        <view class="between">
+          <text class="muted tiny">套餐 {{index + 1}}</text>
+          <text class="link tiny" data-index="{{index}}" bindtap="removePackage">删除</text>
+        </view>
+        <input class="input mt-s" value="{{item.name}}" data-index="{{index}}" data-field="name" bindinput="onPackageField" maxlength="60" placeholder="套餐名称，如 强化班（16课时）" />
+        <view class="row gap mt-s">
+          <input class="input grow" type="digit" value="{{item.price}}" data-index="{{index}}" data-field="price" bindinput="onPackageField" maxlength="8" placeholder="价格" />
+          <input class="input grow" type="number" value="{{item.lessons}}" data-index="{{index}}" data-field="lessons" bindinput="onPackageField" maxlength="4" placeholder="课时数" />
+        </view>
+        <input class="input mt-s" value="{{item.description}}" data-index="{{index}}" data-field="description" bindinput="onPackageField" maxlength="200" placeholder="套餐说明（选填）" />
+        <input class="input mt-s" value="{{item.videoUrl}}" data-index="{{index}}" data-field="videoUrl" bindinput="onPackageField" maxlength="500" placeholder="课程视频链接（选填，http/https 地址）" />
+      </view>
+      <button class="btn btn-ghost btn-sm mt" bindtap="addPackage">＋ 添加套餐</button>
+
+      <button class="btn btn-block mt" bindtap="saveCourse" disabled="{{saving}}">{{saving ? '保存中…' : (creating ? '发布课程' : '保存修改')}}</button>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,30 @@
+.user { display: flex; align-items: center; gap: 20rpx; }
+.avatar { width: 96rpx; height: 96rpx; border-radius: 50%; background: #fbe7d6; flex-shrink: 0; }
+
+.menu {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24rpx 0;
+  border-bottom: 1rpx solid #f0e3d6;
+  font-size: 28rpx;
+}
+.menu:last-child { border-bottom: none; }
+.menu .arrow { color: #b9aca0; }
+
+.mask {
+  position: fixed;
+  inset: 0;
+  background: rgba(40, 28, 18, 0.45);
+  display: flex;
+  align-items: flex-end;
+  z-index: 100;
+}
+.sheet {
+  width: 100%;
+  background: #ffffff;
+  border-radius: 28rpx 28rpx 0 0;
+  padding: 32rpx 28rpx calc(32rpx + env(safe-area-inset-bottom));
+  max-height: 86vh;
+  overflow-y: auto;
+}

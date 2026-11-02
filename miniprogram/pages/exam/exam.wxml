@@ -1,0 +1,165 @@
+<view class="page">
+  <view class="chips">
+    <view wx:for="{{kinds}}" wx:key="key" class="chip {{kind === item.key ? 'chip-on' : ''}}" data-kind="{{item.key}}" bindtap="onKind">{{item.label}}</view>
+  </view>
+  <view class="muted tiny mt-s" wx:if="{{kindMeta}}">{{kindMeta.sub}} · 满分 {{kindMeta.fullScore}}</view>
+
+  <view class="segs mt">
+    <view class="seg {{tab === 'items' ? 'seg-on' : ''}}" data-tab="items" bindtap="onTab">{{kindMeta ? kindMeta.itemLabel : '岗位'}}</view>
+    <view class="seg {{tab === 'match' ? 'seg-on' : ''}}" data-tab="match" bindtap="onTab">分数匹配</view>
+    <view class="seg {{tab === 'data' ? 'seg-on' : ''}}" data-tab="data" bindtap="onTab">备考资料</view>
+  </view>
+
+  <!-- 岗位库 -->
+  <block wx:if="{{tab === 'items'}}">
+    <view class="card mt">
+      <view class="row gap">
+        <picker class="grow" mode="selector" range="{{regions}}" value="{{regionIndex}}" data-field="regionIndex" bindchange="onPicker">
+          <view class="field-label">地区</view>
+          <view class="picker">{{regions[regionIndex]}}</view>
+        </picker>
+        <picker class="grow" mode="selector" range="{{educations}}" value="{{educationIndex}}" data-field="educationIndex" bindchange="onPicker">
+          <view class="field-label">最低学历</view>
+          <view class="picker">{{educations[educationIndex]}}</view>
+        </picker>
+      </view>
+      <view class="row gap">
+        <picker class="grow" mode="selector" range="{{categories}}" value="{{categoryIndex}}" data-field="categoryIndex" bindchange="onPicker">
+          <view class="field-label">类别</view>
+          <view class="picker">{{categories[categoryIndex]}}</view>
+        </picker>
+        <picker class="grow" mode="selector" range="{{examTypes}}" value="{{examTypeIndex}}" data-field="examTypeIndex" bindchange="onPicker">
+          <view class="field-label">招考类型</view>
+          <view class="picker">{{examTypes[examTypeIndex]}}</view>
+        </picker>
+      </view>
+      <view class="field row gap">
+        <input class="input grow" value="{{q}}" bindinput="onKeyword" bindconfirm="onSearch" placeholder="搜索单位或职位" confirm-type="search" />
+        <button class="btn btn-sm search-btn" bindtap="onSearch">搜索</button>
+      </view>
+      <picker class="field" mode="selector" range="{{sorts}}" value="{{sortIndex}}" data-field="sortIndex" bindchange="onPicker">
+        <view class="field-label">排序</view>
+        <view class="picker">{{sorts[sortIndex]}}</view>
+      </picker>
+    </view>
+
+    <view class="between mt">
+      <text class="muted small">共 {{total}} 个{{kindMeta ? kindMeta.itemLabel : '岗位'}}</text>
+      <text class="muted small" wx:if="{{loading}}">加载中…</text>
+    </view>
+
+    <view class="list mt-s">
+      <view wx:for="{{items}}" wx:key="id" class="card item" data-id="{{item.id}}" bindtap="openItem">
+        <view class="between">
+          <text class="strong grow ellipsis">{{item.org}}</text>
+          <text class="tag">{{item.examType}}</text>
+        </view>
+        <view class="muted small">{{item.title}} · {{item.region}}{{item.city ? ' · ' + item.city : ''}}</view>
+        <view class="row wrap gap-s mt-s">
+          <text class="tag tag-muted">{{item.category}}</text>
+          <text class="tag tag-ok">招 {{item.quota}} 人</text>
+          <text class="tag tag-muted">竞争比 {{item.ratio}}</text>
+          <text class="tag tag-warn">{{item.heat}}</text>
+        </view>
+        <view class="between mt-s">
+          <text class="small">{{kindMeta ? kindMeta.lineLabel : '分数线'}} <text class="price-small">{{item.line}}</text></text>
+          <text class="muted tiny">报名 {{item.applicants}} 人 ›</text>
+        </view>
+      </view>
+    </view>
+    <view wx:if="{{!items.length && !loading}}" class="empty">没有匹配的岗位，换个条件试试</view>
+    <view wx:if="{{page < pages}}" class="muted tiny center mt">上滑加载更多</view>
+  </block>
+
+  <!-- 匹配 -->
+  <block wx:if="{{tab === 'match'}}">
+    <view class="card mt">
+      <view class="field">
+        <text class="field-label">{{kindMeta ? kindMeta.scoreLabel : '笔试分数'}}</text>
+        <input class="input" type="digit" value="{{scoreInput}}" bindinput="onScore" placeholder="满分 {{kindMeta.fullScore}}" maxlength="3" />
+      </view>
+      <view class="row gap">
+        <picker class="grow" mode="selector" range="{{regions}}" value="{{regionIndex}}" data-field="regionIndex" bindchange="onPicker">
+          <view class="field-label">意向地区</view>
+          <view class="picker">{{regions[regionIndex]}}</view>
+        </picker>
+        <picker class="grow" mode="selector" range="{{educations}}" value="{{educationIndex}}" data-field="educationIndex" bindchange="onPicker">
+          <view class="field-label">学历</view>
+          <view class="picker">{{educations[educationIndex]}}</view>
+        </picker>
+      </view>
+      <button class="btn btn-block mt" bindtap="runMatch" disabled="{{matching}}">{{matching ? '正在匹配…' : '查看匹配结果'}}</button>
+    </view>
+
+    <block wx:for="{{match.groups}}" wx:key="key" wx:for-item="group">
+      <view class="section-title">{{group.name}}<text class="muted small" style="font-weight:400"> · {{group.items.length}} 个</text></view>
+      <view class="list">
+        <view wx:for="{{group.items}}" wx:key="id" wx:for-item="row" class="card item" data-id="{{row.id}}" bindtap="openItem">
+          <view class="between">
+            <text class="strong grow ellipsis">{{row.org}}</text>
+            <text class="tag" wx:if="{{row.probability !== null}}">把握 {{row.probability}}%</text>
+          </view>
+          <view class="muted small">{{row.title}} · {{row.region}}</view>
+          <view class="between mt-s">
+            <text class="small">{{kindMeta ? kindMeta.lineLabel : '分数线'}} {{row.line}}</text>
+            <text class="muted tiny">竞争比 {{row.ratio}}</text>
+          </view>
+        </view>
+      </view>
+    </block>
+
+    <view wx:if="{{!match.groups.length}}" class="empty">填写分数后查看可参考的岗位</view>
+  </block>
+
+  <!-- 资料 -->
+  <block wx:if="{{tab === 'data'}}">
+    <view wx:if="{{!resources}}" class="empty">正在加载备考资料…</view>
+    <block wx:else>
+      <view class="section-title">备考机构</view>
+      <view class="list">
+        <view wx:for="{{resources.orgs}}" wx:key="id" class="card">
+          <view class="between">
+            <text class="strong">{{item.name}}</text>
+            <text class="tag tag-ok">{{item.rating}} 分</text>
+          </view>
+          <view class="muted tiny">{{item.city}} · {{item.focus}} · 学员 {{item.students}}</view>
+          <view class="muted small mt-s">{{item.intro}}</view>
+          <view class="chips mt-s">
+            <text wx:for="{{item.tags}}" wx:key="*this" wx:for-item="tag" class="tag tag-muted">{{tag}}</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="section-title">课程</view>
+      <view class="list">
+        <view wx:for="{{resources.courses}}" wx:key="id" class="card between">
+          <view class="grow">
+            <view class="strong small">{{item.name}}</view>
+            <view class="muted tiny">{{item.org}} · {{item.mode}} · {{item.hours}} 课时 · {{item.level}}</view>
+          </view>
+          <view class="right">
+            <text class="price-small">¥{{item.price}}</text>
+            <view class="muted tiny">{{item.enrolled}} 人在学</view>
+          </view>
+        </view>
+      </view>
+
+      <view class="section-title">参考书</view>
+      <view class="list">
+        <view wx:for="{{resources.books}}" wx:key="id" class="card between">
+          <view class="grow">
+            <view class="strong small">{{item.title}}</view>
+            <view class="muted tiny">{{item.author}} · {{item.press}}</view>
+            <view class="chips mt-s">
+              <text wx:for="{{item.tags}}" wx:key="*this" wx:for-item="tag" class="tag tag-muted">{{tag}}</text>
+            </view>
+          </view>
+          <view class="right">
+            <text class="price-small">¥{{item.price}}</text>
+            <view class="muted tiny">{{item.rating}} 分</view>
+          </view>
+        </view>
+      </view>
+    </block>
+  </block>
+</view>

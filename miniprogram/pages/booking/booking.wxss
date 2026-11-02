@@ -1,0 +1,8 @@
+.pkg {
+  border: 1rpx solid #f0e3d6;
+  border-radius: 16rpx;
+  padding: 18rpx 22rpx;
+  margin-top: 12rpx;
+}
+.pkg-on { border-color: #e3cdb8; background: #fbe7d6; }
+.chip-off { opacity: 0.45; text-decoration: line-through; }

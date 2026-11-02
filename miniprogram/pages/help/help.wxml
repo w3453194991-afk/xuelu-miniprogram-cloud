@@ -1,0 +1,43 @@
+<view class="page">
+  <view class="card hero" wx:if="{{about}}">
+    <view class="between">
+      <view>
+        <view class="title">{{about.title}}</view>
+        <view class="muted small mt-s">{{about.slogan}}</view>
+      </view>
+      <image class="hero-ip" src="/assets/ip/mascot-rest.png" mode="aspectFit" />
+    </view>
+    <view class="muted small mt">{{about.intro}}</view>
+    <view class="muted tiny mt-s">{{about.description}}</view>
+    <view class="chips mt">
+      <text wx:for="{{about.highlights}}" wx:key="*this" class="tag">{{item}}</text>
+    </view>
+  </view>
+
+  <view class="section-title">常见问题</view>
+  <view class="list">
+    <view wx:for="{{faq}}" wx:key="key" class="card faq" data-index="{{index}}" bindtap="toggle">
+      <view class="between">
+        <view class="row gap-s grow">
+          <text class="tag tag-muted">{{item.category}}</text>
+          <text class="strong small grow">{{item.question}}</text>
+        </view>
+        <text class="muted">{{openIndex === index ? '−' : '＋'}}</text>
+      </view>
+      <view wx:if="{{openIndex === index}}" class="answer small pre">{{item.answer}}</view>
+    </view>
+  </view>
+  <view wx:if="{{!faq.length && !loading}}" class="empty">暂无常见问题</view>
+
+  <view class="section-title">联系我们</view>
+  <view class="card" wx:if="{{contact}}">
+    <view class="line-row between"><text class="muted small">客服电话</text><text class="small link" bindtap="callPhone">{{contact.phone}}</text></view>
+    <view class="line-row between"><text class="muted small">客服微信</text><text class="small link" bindtap="copyWechat">{{contact.wechat}}</text></view>
+    <view class="line-row between"><text class="muted small">邮箱</text><text class="small">{{contact.email}}</text></view>
+    <view class="line-row between"><text class="muted small">服务时间</text><text class="small">{{contact.hours}}</text></view>
+    <view class="line-row"><text class="muted small">地址</text><view class="small mt-s">{{contact.address}}</view></view>
+  </view>
+
+  <button class="btn btn-ghost btn-block mt" bindtap="goFeedback">意见反馈</button>
+  <view class="muted tiny center mt-l" wx:if="{{about}}">{{about.title}} · {{about.version}} · {{about.updatedAt}}</view>
+</view>

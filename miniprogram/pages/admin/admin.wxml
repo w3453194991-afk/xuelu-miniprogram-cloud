@@ -1,0 +1,91 @@
+<view class="page">
+  <view class="card">
+    <view class="strong">平台管理</view>
+    <view class="muted tiny mt-s">输入平台管理令牌后可查看入驻申请与全部订单。</view>
+    <view class="field row gap">
+      <input class="input grow" password value="{{token}}" bindinput="onToken" placeholder="管理令牌" confirm-type="done" bindconfirm="saveToken" />
+      <button class="btn btn-sm" bindtap="saveToken">{{loading ? '校验中…' : '进入'}}</button>
+    </view>
+  </view>
+
+  <block wx:if="{{authed}}">
+    <view class="stats mt">
+      <view class="stat card">
+        <view class="muted tiny">订单总数</view>
+        <view class="stat-value">{{stats.orders}}</view>
+      </view>
+      <view class="stat card">
+        <view class="muted tiny">成交金额</view>
+        <view class="stat-value">¥{{stats.paid}}</view>
+      </view>
+      <view class="stat card">
+        <view class="muted tiny">待核销</view>
+        <view class="stat-value">{{stats.pendingScan}}</view>
+      </view>
+      <view class="stat card">
+        <view class="muted tiny">待审核</view>
+        <view class="stat-value">{{stats.pendingApps}}</view>
+      </view>
+    </view>
+
+    <view class="segs mt">
+      <view class="seg {{tab === 'apps' ? 'seg-on' : ''}}" data-tab="apps" bindtap="onTab">入驻审核</view>
+      <view class="seg {{tab === 'orders' ? 'seg-on' : ''}}" data-tab="orders" bindtap="onTab">订单核销</view>
+    </view>
+
+    <block wx:if="{{tab === 'apps'}}">
+      <view class="list mt">
+        <view wx:for="{{apps}}" wx:key="id" class="card">
+          <view class="between">
+            <view class="row gap-s">
+              <text class="strong">{{item.name}}</text>
+              <text class="tag">{{item.type}}</text>
+            </view>
+            <text class="tag {{item.status === 'approved' ? 'tag-ok' : 'tag-warn'}}">{{item.statusText}}</text>
+          </view>
+          <view class="muted tiny mt-s">{{item.createdAt}} · {{item.phone}}</view>
+          <view class="muted tiny" wx:if="{{item.audienceText}}">服务人群：{{item.audienceText}}</view>
+
+          <view wx:if="{{openApp === item.id}}" class="detail mt-s">
+            <view class="line-row between" wx:if="{{item.contact}}"><text class="muted tiny">联系人</text><text class="small">{{item.contact}}</text></view>
+            <view class="line-row between" wx:if="{{item.audienceText}}"><text class="muted tiny">服务人群</text><text class="small">{{item.audienceText}}</text></view>
+            <view class="line-row between" wx:if="{{item.school}}"><text class="muted tiny">学校</text><text class="small">{{item.school}}</text></view>
+            <view class="line-row between" wx:if="{{item.education}}"><text class="muted tiny">学历</text><text class="small">{{item.education}} {{item.grade}}</text></view>
+            <view class="line-row" wx:if="{{item.subjects}}"><text class="muted tiny">方向</text><view class="small mt-s">{{item.subjects}}</view></view>
+            <view class="line-row" wx:if="{{item.resume}}"><text class="muted tiny">简历</text><view class="small mt-s pre">{{item.resume}}</view></view>
+            <view class="line-row" wx:if="{{item.routeName}}">
+              <text class="muted tiny">线路</text>
+              <view class="small mt-s">{{item.routeName}}：{{item.startPoint}} → {{item.endPoint}}</view>
+              <view class="muted tiny" wx:if="{{item.stops.length}}">经停：{{item.stops}}</view>
+            </view>
+          </view>
+
+          <view class="row gap mt-s">
+            <button class="btn btn-ghost btn-sm" data-id="{{item.id}}" bindtap="toggleApp">{{openApp === item.id ? '收起资料' : '查看资料'}}</button>
+            <button class="btn btn-plain btn-sm" data-phone="{{item.phone}}" bindtap="callPhone">电话联系</button>
+            <button wx:if="{{item.status === 'pending'}}" class="btn btn-sm" data-id="{{item.id}}" bindtap="approve">通过审核</button>
+          </view>
+        </view>
+      </view>
+      <view wx:if="{{!apps.length}}" class="empty">暂无入驻申请</view>
+    </block>
+
+    <block wx:if="{{tab === 'orders'}}">
+      <view class="list mt">
+        <view wx:for="{{orders}}" wx:key="id" class="card">
+          <view class="between">
+            <text class="strong grow ellipsis">{{item.title}}</text>
+            <text class="tag {{item.stage === 'ok' ? 'tag-ok' : item.stage === 'warn' ? 'tag-warn' : 'tag-muted'}}">{{item.statusText}}</text>
+          </view>
+          <view class="muted tiny mt-s">{{item.number}} · {{item.createdAt}}</view>
+          <view class="muted tiny">学员 {{item.student}} · {{item.phone}}</view>
+          <view class="between mt-s">
+            <text class="price-small">¥{{item.amount}}</text>
+            <button wx:if="{{item.status === 'paid'}}" class="btn btn-sm" data-id="{{item.id}}" bindtap="complete">核销</button>
+          </view>
+        </view>
+      </view>
+      <view wx:if="{{!orders.length}}" class="empty">暂无订单</view>
+    </block>
+  </block>
+</view>

@@ -1,0 +1,134 @@
+<view class="page">
+  <view class="hero card">
+    <view class="hero-text">
+      <view class="hero-eyebrow">GROW TOGETHER · SHINE TOGETHER</view>
+      <view class="hero-title">每一份好奇</view>
+      <view class="hero-title hero-title-tight">都值得被认真对待</view>
+      <view class="muted">青少年成长 · 成人在职提升，一站式找齐课程与服务</view>
+    </view>
+    <view class="hero-ip">
+      <image src="/assets/ip/mascot-rest.png" mode="aspectFit" />
+    </view>
+  </view>
+
+  <view class="toolbar">
+    <view class="city" bindtap="locate">
+      <text>⌖</text><text class="strong">{{city}}</text>
+    </view>
+    <view class="search">
+      <input placeholder="搜索课程 / 伴学 / 接送" value="{{keyword}}" confirm-type="search" bindinput="onKeyword" bindconfirm="onSearch" />
+      <button class="btn btn-sm search-btn" bindtap="onSearch">搜索</button>
+    </view>
+  </view>
+
+  <view class="quick-grid">
+    <view wx:for="{{quick}}" wx:key="key" class="quick" data-key="{{item.key}}" bindtap="openQuick">
+      <text class="quick-icon">{{item.icon}}</text>
+      <text class="quick-name">{{item.name}}</text>
+      <text class="quick-desc">{{item.desc}}</text>
+    </view>
+  </view>
+
+  <view class="segs mt">
+    <view wx:for="{{types}}" wx:key="id" class="seg {{type === item.id ? 'seg-on' : ''}}" data-type="{{item.id}}" bindtap="onType">{{item.name}}</view>
+  </view>
+
+  <!-- 课程 / 伴学：二级分类 -->
+  <view class="chips mt-s" wx:if="{{subTabs.length}}">
+    <view class="chip chip-sm {{sub === 'all' ? 'chip-on' : ''}}" data-sub="all" bindtap="onSub">全部</view>
+    <view wx:for="{{subTabs}}" wx:key="id" class="chip chip-sm {{sub === item.id ? 'chip-on' : ''}}" data-sub="{{item.id}}" bindtap="onSub">{{item.name}}</view>
+  </view>
+  <view class="sub-hint" wx:if="{{subHint}}">{{subHint}}</view>
+
+  <!-- 精选：四条推荐线，各取前两条 -->
+  <block wx:if="{{type === 'all'}}">
+    <view wx:for="{{featured}}" wx:key="id" wx:for-item="group" class="feed-group">
+      <view class="feed-head">
+        <view class="grow">
+          <text class="feed-name">{{group.name}}</text>
+          <text class="feed-desc">{{group.desc}}</text>
+        </view>
+        <text class="link small" data-tab="{{group.tab}}" data-sub="{{group.sub}}" bindtap="openGroup">全部 {{group.total}} 个 ›</text>
+      </view>
+      <view class="cards">
+        <view wx:for="{{group.items}}" wx:key="id" wx:for-item="item" class="card svc" data-id="{{item.id}}" bindtap="openDetail">
+          <view class="thumb tone-{{item.tone}}">{{item.icon}}</view>
+          <view class="grow">
+            <view class="between">
+              <text class="svc-title ellipsis">{{item.title}}</text>
+              <text class="price-small">¥{{item.priceText}}<text class="tiny muted"> /{{item.unit}}</text></text>
+            </view>
+            <view class="muted small ellipsis">{{item.category}} · {{item.merchant}}</view>
+            <view class="tutor-line ellipsis" wx:if="{{item.tutor && item.tutor.schoolText}}">{{item.tutor.schoolText}}</view>
+            <view class="stars" wx:if="{{item.tutor && item.tutor.score}}">
+              <text wx:for="{{item.tutor.stars}}" wx:for-item="star" wx:key="key" class="star {{star.on ? 'on' : ''}}">★</text>
+              <text class="score-text">{{item.tutor.scoreText}}</text>
+              <text class="count-text">{{item.tutor.countText}}</text>
+            </view>
+            <view class="muted tiny ellipsis">⌖ {{item.location}} · {{item.remainingText}}</view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view wx:if="{{!featured.length}}" class="empty">没有找到匹配的服务，试试其他关键词</view>
+  </block>
+
+  <!-- 校车：线路卡片 -->
+  <view class="cards mt" wx:elif="{{type === 'bus'}}">
+    <view wx:for="{{list}}" wx:key="id" class="card bus" data-id="{{item.id}}" bindtap="openDetail">
+      <view class="between">
+        <view class="row gap-s grow">
+          <text class="bus-icon">{{item.icon}}</text>
+          <view class="grow">
+            <text class="svc-title ellipsis">{{item.title}}</text>
+            <view class="muted tiny">{{item.merchant}}<text wx:if="{{item.vehicle}}"> · {{item.vehicle}}</text></view>
+          </view>
+        </view>
+        <text class="tag tag-warn" wx:if="{{item.pickup && item.pickup.isCar}}">私家车</text>
+        <text class="tag tag-wen" wx:elif="{{item.lowSeat}}">仅剩 {{item.remaining}}</text>
+        <text class="tag tag-muted" wx:else>余位 {{item.remaining}}</text>
+      </view>
+
+      <view class="bus-route">
+        <text class="bus-stop">{{item.routeText}}</text>
+        <text class="bus-meta" wx:if="{{item.timeText}}">{{item.timeText}}</text>
+        <text class="bus-meta" wx:elif="{{item.pickup && item.pickup.timeText}}">{{item.pickup.timeText}}</text>
+        <text class="bus-meta" wx:if="{{item.pickup && item.pickup.childText}}">{{item.pickup.childText}}</text>
+      </view>
+
+      <view class="between bus-foot">
+        <text class="muted tiny" wx:if="{{item.pickup}}">{{item.pickup.area}} · {{item.pickup.seatText}}</text>
+        <text class="muted tiny" wx:else>{{item.stops}} 个站点 · {{item.location}}</text>
+        <text class="price-small">¥{{item.priceText}}<text class="tiny muted"> /{{item.unit}}</text></text>
+      </view>
+    </view>
+    <view wx:if="{{!list.length}}" class="empty">没有找到匹配的校车线路</view>
+  </view>
+
+  <!-- 课程 / 伴学列表 -->
+  <view class="cards mt" wx:else>
+    <view wx:for="{{list}}" wx:key="id" class="card svc" data-id="{{item.id}}" bindtap="openDetail">
+      <view class="thumb tone-{{item.tone}}">{{item.icon}}</view>
+      <view class="grow">
+        <view class="between">
+          <text class="svc-title ellipsis">{{item.title}}</text>
+          <text class="price-small">¥{{item.priceText}}<text class="tiny muted"> /{{item.unit}}</text></text>
+        </view>
+        <view class="muted small ellipsis">{{item.category}} · {{item.merchant}}</view>
+        <view class="tutor-line ellipsis" wx:if="{{item.tutor && item.tutor.schoolText}}">{{item.tutor.schoolText}}</view>
+        <view class="stars" wx:if="{{item.tutor && item.tutor.score}}">
+          <text wx:for="{{item.tutor.stars}}" wx:for-item="star" wx:key="key" class="star {{star.on ? 'on' : ''}}">★</text>
+          <text class="score-text">{{item.tutor.scoreText}}</text>
+          <text class="count-text">{{item.tutor.countText}}</text>
+        </view>
+        <view class="muted tiny ellipsis">⌖ {{item.location}} · {{item.remainingText}}</view>
+      </view>
+    </view>
+    <view wx:if="{{!list.length}}" class="empty">这个分类还没有服务，换个分类看看</view>
+  </view>
+
+  <view class="float-assistant" bindtap="openAssistant">
+    <image src="/assets/ip/mascot-front.png" mode="aspectFit" />
+    <text>问鹭鹭</text>
+  </view>
+</view>

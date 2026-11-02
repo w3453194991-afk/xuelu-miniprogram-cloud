@@ -1,0 +1,52 @@
+.hero {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  background: linear-gradient(135deg, #fbe7d6 0%, #fdf8f2 70%);
+}
+.hero-title {
+  font-size: 38rpx;
+  font-weight: 800;
+  color: #4a382a;
+  margin-bottom: 6rpx;
+}
+.hero-car {
+  font-size: 72rpx;
+  line-height: 1;
+  flex: none;
+}
+.hero-safety {
+  margin-top: 16rpx;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10rpx 20rpx;
+}
+.safety-item {
+  font-size: 20rpx;
+  color: #8a4a1c;
+  background: rgba(255, 255, 255, 0.72);
+  border-radius: 999rpx;
+  padding: 6rpx 16rpx;
+}
+.sub-hint { margin: 16rpx 4rpx 0; }
+.cards { margin-top: 20rpx; }
+.bus { display: flex; flex-direction: column; gap: 14rpx; }
+.bus-icon { font-size: 40rpx; }
+.bus-route {
+  background: #faf3ea;
+  border-radius: 14rpx;
+  padding: 14rpx 18rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+}
+.bus-stop { font-size: 25rpx; font-weight: 600; color: #6b4a2b; }
+.bus-meta { font-size: 21rpx; color: #8a6a4d; }
+.bus-foot { padding-top: 4rpx; }
+.join-cta {
+  margin-top: 20rpx;
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  background: linear-gradient(135deg, #fdeeda 0%, #ffffff 80%);
+}

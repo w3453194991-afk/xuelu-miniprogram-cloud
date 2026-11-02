@@ -1,0 +1,13 @@
+.search { display: flex; align-items: center; gap: 12rpx; padding: 16rpx 24rpx; }
+.search input { height: 56rpx; font-size: 26rpx; }
+.list { display: flex; flex-direction: column; gap: 18rpx; }
+.org { padding: 24rpx; }
+.org-tags { display: flex; align-items: center; gap: 10rpx; flex: none; }
+.rating-pill {
+  font-size: 21rpx;
+  font-weight: 700;
+  color: #97400a;
+  background: #fbe7d6;
+  border-radius: 999rpx;
+  padding: 6rpx 16rpx;
+}

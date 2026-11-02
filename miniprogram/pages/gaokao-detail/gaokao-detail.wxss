@@ -1,0 +1,4 @@
+.hero { background: linear-gradient(135deg, #fff6ee, #ffeada); }
+.list { display: flex; flex-direction: column; gap: 18rpx; }
+.major { padding: 22rpx; }
+.head-row { color: var(--muted, #94897e); font-size: 22rpx; }

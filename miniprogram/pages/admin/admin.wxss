@@ -1,0 +1,5 @@
+.stats { display: flex; gap: 14rpx; }
+.stat { flex: 1; padding: 20rpx 16rpx; }
+.stat-value { font-size: 34rpx; font-weight: 800; color: var(--brand-deep, #97400a); margin-top: 6rpx; }
+.list { display: flex; flex-direction: column; gap: 16rpx; }
+.detail { background: #faf4ee; border-radius: 14rpx; padding: 8rpx 16rpx; }

@@ -1,0 +1,9 @@
+{
+  "name": "gaokao",
+  "version": "1.0.0",
+  "description": "学鹭伴学 · 高考志愿模拟填报（确定性模拟数据）",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~3.0.0"
+  }
+}

@@ -1,0 +1,62 @@
+<view class="page">
+  <view class="card" wx:if="{{!logged}}">
+    <view class="strong">登录后查看伴学资料</view>
+    <view class="muted small mt-s">伴学资料绑定在你的大学生账号上。</view>
+    <button class="btn btn-block mt" bindtap="goLogin">去登录</button>
+  </view>
+
+  <view class="card" wx:elif="{{!isTutor}}">
+    <view class="strong">该页面面向大学生伴学账号</view>
+    <view class="muted small mt-s">当前账号不是大学生类型，如需以伴学身份入驻，请使用大学生账号登录。</view>
+  </view>
+
+  <block wx:elif="{{app}}">
+    <view class="card hero">
+      <view class="between">
+        <view class="row gap">
+          <image wx:if="{{app.photo}}" class="avatar" src="{{app.photo}}" mode="aspectFill" />
+          <view wx:else class="avatar placeholder">🧑‍🎓</view>
+          <view>
+            <view class="title">{{app.name}}</view>
+            <view class="muted small">{{app.school || '学校待完善'}}<text wx:if="{{app.education}}"> · {{app.education}}</text><text wx:if="{{app.grade}}"> · {{app.grade}}</text></view>
+          </view>
+        </view>
+        <text class="tag {{app.status === 'approved' ? 'tag-ok' : 'tag-warn'}}">{{statusText}}</text>
+      </view>
+      <view class="row gap-s mt">
+        <text class="tag" wx:if="{{app.hourlyRate}}">¥{{app.hourlyRate}} / 小时</text>
+        <text class="tag tag-muted" wx:if="{{app.gender}}">{{app.gender}}</text>
+        <text class="tag tag-muted" wx:if="{{app.major}}">{{app.major}}</text>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="section-title" style="margin-top:0">伴学方向</view>
+      <view class="pre">{{app.subjects || '待完善'}}</view>
+      <view class="chips mt-s" wx:if="{{methods.length}}">
+        <text wx:for="{{methods}}" wx:key="*this" class="tag tag-muted">{{item}}</text>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="section-title" style="margin-top:0">个人经历</view>
+      <view class="pre">{{app.resume || '待完善'}}</view>
+    </view>
+
+    <view class="card">
+      <view class="line-row between"><text class="muted small">联系电话</text><text class="small">{{app.phone}}</text></view>
+      <view class="line-row between" wx:if="{{app.address}}"><text class="muted small">服务范围</text><text class="small">{{app.address}}</text></view>
+      <view class="line-row between" wx:if="{{app.experience}}"><text class="muted small">相关经历</text><text class="small">{{app.experience}}</text></view>
+    </view>
+
+    <view class="banner mt">伴学以阅读陪伴、习惯培养与时间规划为限，不包含学科教学、补课、考试培训，也不作提分承诺。</view>
+
+    <button class="btn btn-ghost btn-block mt" bindtap="goJoin">补充或更新入驻资料</button>
+  </block>
+
+  <view class="card" wx:elif="{{!loading}}">
+    <view class="strong">还没有提交伴学入驻</view>
+    <view class="muted small mt-s">提交资料并通过审核后，家长就能在平台上看到你的伴学服务。</view>
+    <button class="btn btn-block mt" bindtap="goJoin">开始入驻</button>
+  </view>
+</view>

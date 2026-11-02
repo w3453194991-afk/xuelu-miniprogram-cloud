@@ -1,0 +1,79 @@
+<view class="chat">
+  <scroll-view class="thread" scroll-y scroll-into-view="{{scrollTo}}" scroll-with-animation>
+    <view class="thread-inner">
+      <view wx:for="{{messages}}" wx:key="id" id="{{item.id}}" class="row-{{item.role}}">
+        <image wx:if="{{item.role === 'bot'}}" class="avatar" src="/assets/ip/mascot-front.png" mode="aspectFit" />
+        <view class="bubble-wrap">
+          <view class="bubble {{item.role}}">
+            <text wx:if="{{item.typing}}" class="typing">鹭鹭正在想…</text>
+            <text wx:else class="bubble-text">{{item.text}}</text>
+          </view>
+          <view wx:if="{{item.courses && item.courses.length}}" class="course-list">
+            <view
+              wx:for="{{item.courses}}"
+              wx:for-item="cs"
+              wx:key="id"
+              class="course-card"
+              data-id="{{cs.id}}"
+              bindtap="onCourse"
+              hover-class="course-card-on"
+            >
+              <text class="course-icon">{{cs.icon}}</text>
+              <view class="course-info">
+                <text class="course-title ellipsis">{{cs.title}}</text>
+                <text class="course-meta ellipsis">{{cs.merchant}}<text wx:if="{{cs.tag}}"> · {{cs.tag}}</text></text>
+              </view>
+              <view class="course-side">
+                <text class="course-price">¥{{cs.price}}</text>
+                <text class="course-unit">{{cs.unit}}</text>
+              </view>
+            </view>
+          </view>
+          <button
+            wx:if="{{item.route}}"
+            class="go"
+            data-index="{{index}}"
+            bindtap="onRoute"
+          >去「{{item.route.label}}」→</button>
+          <view wx:if="{{item.related && item.related.length}}" class="related">
+            <view
+              wx:for="{{item.related}}"
+              wx:for-item="rel"
+              wx:key="q"
+              class="rel"
+              data-q="{{rel.q}}"
+              bindtap="onRelated"
+            >{{rel.q}}</view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+
+  <view class="quick-bar">
+    <scroll-view scroll-x class="quick-scroll">
+      <view class="quick-row">
+        <view
+          wx:for="{{quick}}"
+          wx:key="*this"
+          class="chip"
+          data-q="{{item}}"
+          bindtap="onQuick"
+        >{{item}}</view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <view class="composer">
+    <input
+      class="composer-input"
+      value="{{input}}"
+      placeholder="输入问题，比如：怎么预约课程？"
+      confirm-type="send"
+      maxlength="60"
+      bindinput="onInput"
+      bindconfirm="onSubmit"
+    />
+    <button class="composer-send {{input ? '' : 'off'}}" bindtap="onSubmit" disabled="{{sending}}">发送</button>
+  </view>
+</view>

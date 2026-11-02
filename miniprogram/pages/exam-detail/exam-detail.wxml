@@ -1,0 +1,56 @@
+<view class="page" wx:if="{{row}}">
+  <view class="card hero">
+    <view class="between">
+      <text class="title grow">{{row.org}}</text>
+      <text class="tag">{{row.examType}}</text>
+    </view>
+    <view class="muted small mt-s">{{row.title}} · {{row.region}}{{row.city ? ' · ' + row.city : ''}}</view>
+    <view class="chips mt-s">
+      <text class="tag tag-muted">{{row.category}}</text>
+      <text class="tag tag-ok">{{row.quotaLabel}} {{row.quota}}</text>
+      <text class="tag tag-muted">{{row.applicantLabel}} {{row.applicants}}</text>
+      <text class="tag tag-warn">竞争比 {{row.ratio}}</text>
+    </view>
+    <view class="between mt">
+      <text class="small">2025 年 {{row.lineLabel}}</text>
+      <text class="price">{{row.line}}<text class="tiny muted"> / {{row.fullScore}}</text></text>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="section-title" style="margin-top:0">报考条件</view>
+    <view class="line-row between"><text class="muted small">学历要求</text><text class="small">{{row.requirements.education || '不限'}}</text></view>
+    <view class="line-row"><text class="muted small">专业要求</text><view class="small mt-s">{{row.requirements.major || '不限'}}</view></view>
+    <view class="line-row between"><text class="muted small">政治面貌</text><text class="small">{{row.requirements.political || '不限'}}</text></view>
+    <view class="line-row between"><text class="muted small">基层经历</text><text class="small">{{row.requirements.experience || '无限制'}}</text></view>
+    <view class="line-row between" wx:if="{{row.requirements.certificate}}"><text class="muted small">证书要求</text><text class="small">{{row.requirements.certificate}}</text></view>
+    <view class="line-row between" wx:if="{{row.requirements.freshOnly}}"><text class="muted small">应届要求</text><text class="small">仅限应届毕业生</text></view>
+  </view>
+
+  <view class="card">
+    <view class="section-title" style="margin-top:0">历年{{row.lineLabel}}与竞争比</view>
+    <view class="grid-table">
+      <view class="grid-row head-row">
+        <text class="grid-cell">年份</text>
+        <text class="grid-cell">{{row.lineLabel}}</text>
+        <text class="grid-cell">竞争比</text>
+        <text class="grid-cell">{{row.quotaLabel}}</text>
+      </view>
+      <view wx:for="{{series}}" wx:key="year" class="grid-row">
+        <text class="grid-cell">{{item.year}}</text>
+        <text class="grid-cell">{{item.line}}</text>
+        <text class="grid-cell">{{item.ratio}}</text>
+        <text class="grid-cell">{{item.quota}}</text>
+      </view>
+    </view>
+    <view wx:if="{{!series.length}}" class="empty">暂无历年数据</view>
+  </view>
+
+  <view class="footer-bar">
+    <button class="btn grow" bindtap="addToList" disabled="{{adding}}">加入报考清单</button>
+  </view>
+</view>
+
+<view class="page" wx:else>
+  <view class="empty" wx:if="{{!loading}}">条目不存在或已下线</view>
+</view>

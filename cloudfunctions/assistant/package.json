@@ -1,0 +1,9 @@
+{
+  "name": "assistant",
+  "version": "1.0.0",
+  "description": "学鹭伴学 · 学鹭助手 AI 对话代理",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~3.0.0"
+  }
+}

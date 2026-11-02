@@ -19,7 +19,8 @@
     ├── server.mjs              零依赖 Node HTTP 服务（Node ≥22）
     ├── public/                 原生 JS 响应式页面：家长端 + 管理工作台
     ├── tests/                  node --test 接口集成测试
-    └── data/store.json         演示数据（首次启动自动生成）
+    ├── data/store.json         演示数据（首次启动自动生成）
+    └── legacy-amap/            旧版高德地图模块，已不被引用，仅存档
 ```
 
 ## 两端关系

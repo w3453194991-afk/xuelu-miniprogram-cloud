@@ -98,7 +98,6 @@ function normalizeDb(raw){
   if(!Array.isArray(base.orders)) base.orders = [];
   if(!Array.isArray(base.applications)) base.applications = [];
   if(!Array.isArray(base.feedback)) base.feedback = [];
-  if(!Array.isArray(base.favorites)) base.favorites = [];
   if(!Array.isArray(base.services)) base.services = [];
   if(!base.profile || typeof base.profile !== 'object' || Array.isArray(base.profile)) base.profile = defaultProfile();
   if(!Array.isArray(base.profile.students)) base.profile.students = defaultProfile().students;
@@ -113,16 +112,9 @@ function mutate(fn) {
   queue = next.catch(()=>{}); return next;
 }
 function fail(message,status=400){throw Object.assign(new Error(message),{status});}
-/* 预览页跑在另一个端口，需要跨域；仅监听 127.0.0.1 的演示服务，放开来源是安全的 */
-const CORS={
- 'Access-Control-Allow-Origin':'*',
- 'Access-Control-Allow-Methods':'GET,POST,PUT,DELETE,OPTIONS',
- 'Access-Control-Allow-Headers':'Content-Type,Authorization',
- 'Access-Control-Max-Age':'86400'
-};
 function clean(value,max=100){return typeof value==='string'?value.trim().slice(0,max):'';}
 async function body(req){let text='';for await(const chunk of req){text+=chunk;if(text.length>400000)fail('请求过大',413);}try{return JSON.parse(text||'{}');}catch{fail('JSON 格式错误');}}
-const send=(res,status,data,headers={})=>{res.writeHead(status,{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store',...CORS,...headers});res.end(JSON.stringify(data));};
+const send=(res,status,data,headers={})=>{res.writeHead(status,{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store',...headers});res.end(JSON.stringify(data));};
 
 /* ------------------------------------------------------------------ */
 /* 服务目录：种子 + db.services 覆盖，读取时总能拿到新字段               */
@@ -457,7 +449,6 @@ const server=http.createServer(async(req,res)=>{
  if(demoAuth){const expected='Basic '+Buffer.from(demoAuth.user+':'+demoAuth.password).toString('base64');if(req.headers.authorization!==expected){res.writeHead(401,{'WWW-Authenticate':'Basic realm="Education demo", charset="UTF-8"','Cache-Control':'no-store'});res.end('Authentication required');return;}}
  try {
   const url=new URL(req.url,'http://localhost');const p=url.pathname;
-  if(req.method==='OPTIONS')return send(res,204,{});
   if(p==='/api/health')return send(res,200,{ok:true,mode:'demo',city:content.city});
 
   /* ---------------- 服务目录 ---------------- */
@@ -719,28 +710,6 @@ const server=http.createServer(async(req,res)=>{
   }
   const application=p.match(/^\/api\/applications\/([^/]+)\/approve$/);
   if(application&&req.method==='POST')return send(res,200,await mutate(()=>{const a=db.applications.find(x=>x.id===application[1]);if(!a)fail('申请不存在',404);if(a.status!=='pending')fail('该申请已审核',409);a.status='approved';return a;}));
-
-  /* ---------------- 收藏线路 ---------------- */
-  if(p==='/api/favorites'&&req.method==='GET')return send(res,200,db.favorites);
-  if(p==='/api/favorites'&&req.method==='POST'){
-   const b=await body(req);
-   const id=clean(b.id,40);
-   if(!id)fail('缺少线路 id');
-   if(!catalog().some(s=>s.id===id&&s.type==='bus'))fail('线路不存在',404);
-   return send(res,200,await mutate(()=>{
-    if(!db.favorites.includes(id))db.favorites.unshift(id);
-    return db.favorites;
-   }));
-  }
-  if(p==='/api/favorites'&&req.method==='DELETE'){
-   const b=await body(req);
-   const id=clean(b.id,40);
-   if(!id)fail('缺少线路 id');
-   return send(res,200,await mutate(()=>{
-    db.favorites=db.favorites.filter(x=>x!==id);
-    return db.favorites;
-   }));
-  }
 
   if(p.startsWith('/api/'))return send(res,404,{error:'接口不存在'});
   if(!['GET','HEAD'].includes(req.method))return send(res,405,{error:'方法不支持'});

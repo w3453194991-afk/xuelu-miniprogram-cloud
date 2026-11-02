@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>高德地图诊断</title>
+<style>
+  body{font-family:system-ui,-apple-system,'Microsoft YaHei',sans-serif;margin:0;padding:22px;background:#f7f9f5;color:#243024}
+  h1{font-size:19px;margin:0 0 6px}
+  .sub{color:#7a8a76;font-size:13px;margin-bottom:18px}
+  .step{background:#fff;border:1px solid #e3e9df;border-radius:10px;padding:14px 16px;margin-bottom:10px}
+  .step h2{font-size:14px;margin:0 0 8px;display:flex;align-items:center;gap:8px}
+  .badge{font-size:11px;padding:2px 8px;border-radius:20px;font-weight:600}
+  .ok{background:#e3f4e8;color:#1f7a45}
+  .bad{background:#fdeaea;color:#b3352c}
+  .wait{background:#fdf4e0;color:#8a6414}
+  .val{font-family:Consolas,Menlo,monospace;font-size:12px;background:#f4f7f2;padding:8px 10px;border-radius:6px;word-break:break-all;white-space:pre-wrap;line-height:1.7;margin:0}
+  #diag-map{width:100%;height:320px;border:1px solid #e3e9df;border-radius:10px;background:#eef2ea;margin-top:12px;position:relative}
+  .hint{color:#93a18d;font-size:12px;margin-top:8px;line-height:1.8}
+  .kbd{background:#eef2ea;border:1px solid #dbe4d6;border-radius:4px;padding:1px 6px;font-family:Consolas,monospace;font-size:12px}
+  .fix{background:#fff;border-left:3px solid #c9a227;padding:12px 16px;border-radius:6px;margin-top:14px;font-size:13px;line-height:1.9}
+  .fix b{color:#8a6414}
+</style>
+</head>
+<body>
+<h1>高德地图接入诊断</h1>
+<div class="sub">这个页面会逐步检查 SDK 加载、Key 认证、地理编码和地图渲染，把结果直接显示出来。</div>
+
+<div class="step"><h2>1. 当前使用的 Key<span id="b-key" class="badge wait">检查中</span></h2><pre class="val" id="v-key">—</pre></div>
+<div class="step"><h2>2. SDK 是否加载<span id="b-sdk" class="badge wait">检查中</span></h2><pre class="val" id="v-sdk">—</pre></div>
+<div class="step"><h2>3. Key 认证是否通过<span id="b-auth" class="badge wait">检查中</span></h2><pre class="val" id="v-auth">—</pre></div>
+<div class="step"><h2>4. 地理编码能否解析地址<span id="b-geo" class="badge wait">检查中</span></h2><pre class="val" id="v-geo">—</pre></div>
+<div class="step"><h2>5. 地图能否渲染<span id="b-map" class="badge wait">检查中</span></h2><div id="diag-map"><div class="hint" style="padding:20px;text-align:center">等待上面的步骤完成…</div></div></div>
+
+<div class="step"><h2>控制台捕获到的错误<span id="b-err" class="badge wait">监听中</span></h2><pre class="val" id="v-err">（暂无）</pre></div>
+
+<div class="fix">
+<b>怎么根据结果修：</b><br>
+· 第 2 步失败 → 浏览器拦截了 <span class="kbd">webapi.amap.com</span>，检查广告拦截插件或网络<br>
+· 第 3 步报 <span class="kbd">INVALID_USER_SCODE</span> → <b>安全密钥不对</b>，去控制台 Key 详情页复制「安全密钥」<br>
+· 第 3 步报 <span class="kbd">INVALID_USER_KEY</span> → Key 本身无效，或没登记当前域名 <span class="kbd">127.0.0.1:3100</span><br>
+· 第 3 步报 <span class="kbd">USERKEY_PLAT_NOMATCH</span> → Key 类型不是「Web端(JS API)」，要重新创建<br>
+· 第 4 步失败但 3 通过 → 地址太模糊，需要在后台填完整门牌号
+</div>
+
+<script>
+const KEY = '408c6da09a579369da56593f7b7730eb';
+const SEC = '6d4e4649484eb7a6110b12e9be861149';
+
+const $ = id => document.getElementById(id);
+const set = (id, cls, text) => { const b = $('b-' + id); b.className = 'badge ' + cls; b.textContent = text; };
+const val = (id, t) => { $('v-' + id).textContent = t; };
+
+// 捕获控制台错误，让 AMap 的认证报错可见
+const caught = [];
+const origErr = console.error.bind(console);
+console.error = (...a) => { caught.push(a.map(x => typeof x === 'object' ? JSON.stringify(x) : String(x)).join(' ')); $('v-err').textContent = caught.join('\n'); origErr(...a); };
+window.addEventListener('error', e => { caught.push('[window.error] ' + e.message); $('v-err').textContent = caught.join('\n'); });
+
+val('key', 'key            = ' + KEY + '\nsecurityJsCode = ' + SEC + '\nhost           = ' + location.host);
+
+window._AMapSecurityConfig = { securityJsCode: SEC };
+
+let done = false;
+function fail(msg) { if (!done) { done = true; set('map', 'bad', '未渲染'); val('geo', msg); } }
+
+// 8 秒还没有地图就判定失败，避免一直显示空白
+setTimeout(() => {
+  if (!window.AMap) { set('sdk', 'bad', '加载失败'); }
+  fail('超时：地图未在 8 秒内渲染');
+}, 8000);
+
+const s = document.createElement('script');
+s.src = `https://webapi.amap.com/maps?v=2.0&key=${KEY}&plugin=AMap.Geocoder,AMap.ToolBar`;
+s.onload = () => {
+  set('sdk', 'ok', '已加载');
+  val('sdk', 'window.AMap = ' + typeof window.AMap + '\nAMap 版本 = ' + (window.AMap && AMap.version || '未知'));
+  run();
+};
+s.onerror = () => { set('sdk', 'bad', '加载失败'); val('sdk', '脚本请求失败，可能被网络或插件拦截'); fail('SDK 脚本未能加载'); };
+document.head.append(s);
+
+function run() {
+  AMap.plugin(['AMap.Geocoder'], () => {
+    set('auth', 'ok', '插件已就绪');
+    val('auth', 'Geocoder 插件加载成功，说明 Key 至少通过了 SDK 侧认证。\n（若地图仍空白，请看第 5 步和下方错误）');
+
+    const geo = new AMap.Geocoder({ city: '杭州' });
+    geo.getLocation('杭州市滨江区江南大道 88 号 3 层', (status, result) => {
+      if (status === 'complete' && result.geocodes && result.geocodes.length) {
+        const g = result.geocodes[0];
+        set('geo', 'ok', '解析成功');
+        val('geo', `status = ${status}\n地址 = ${g.formattedAddress}\n经纬度 = ${g.location.lng}, ${g.location.lat}`);
+        drawMap(g.location);
+      } else {
+        set('geo', 'bad', '解析失败');
+        val('geo', `status = ${status}\ninfo = ${result && result.info}\n（认证问题同样会表现为地理编码失败）`);
+        fail('地理编码未返回结果，无法定位');
+      }
+    });
+  });
+}
+
+let map;
+function drawMap(pos) {
+  const box = $('diag-map');
+  box.innerHTML = '';
+  try {
+    map = new AMap.Map('diag-map', { zoom: 16, center: pos, viewMode: '2D', resizeEnable: true });
+    new AMap.Marker({ map, position: pos, title: '拾光艺术中心' });
+    map.on('complete', () => {
+      set('map', 'ok', '渲染成功');
+      done = true;
+    });
+    setTimeout(() => {
+      if (!done) { set('map', 'bad', '渲染超时'); fail('地图实例已创建但未触发 complete 事件'); }
+    }, 5000);
+  } catch (e) {
+    set('map', 'bad', '异常');
+    fail('创建地图时抛错：' + e.message);
+  }
+}
+</script>
+</body>
+</html>

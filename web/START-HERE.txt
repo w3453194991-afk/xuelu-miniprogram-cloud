@@ -1,7 +1,0 @@
-Xuelu Learning source package
-Requires Node.js 22+. No npm dependencies.
-Run: node server.mjs
-Open: http://127.0.0.1:3100
-Tests: node --test tests/*.test.mjs
-Demo only: simulated payments, no account isolation.
-No private keys, API tokens, or user data included.
